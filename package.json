@@ -1,0 +1,26 @@
+{
+  "name": "sns",
+  "version": "1.0.0",
+  "description": "Social Networking Service",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/golgol22/SNS.git"
+  },
+  "author": "hjy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/golgol22/SNS/issues"
+  },
+  "homepage": "https://github.com/golgol22/SNS#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "morgan": "^1.10.0"
+  }
+}
