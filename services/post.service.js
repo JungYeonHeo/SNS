@@ -38,6 +38,14 @@ class PostService {
       throw err;
     }
   }
+
+  static async delete(postId) {
+    try {
+      await models.posts.update({ state: 1 }, { where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = PostService;

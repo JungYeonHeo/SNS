@@ -4,7 +4,7 @@ const PostController = require("../controllers/post.controller");
 
 router.post("/create", PostController.createPost);
 router.patch("/update", PostController.updatePost);
-router.patch("/delete");
+router.patch("/delete", PostController.deletePost);
 router.get("/detail");
 router.get("/list");
 router.patch("/like");

@@ -21,12 +21,27 @@ class PostController {
     try {
       const writer = await PostService.getPostWriter(postId);
       if (userId != writer) {
-        res.status(400).json(response.BAD_REQUEST);
+        res.status(403).json(response.FORBIDDEN);
       }
-
       const updatedAt = new Date().toFormat("YYYY-MM-DD HH:MI:SS");
       await PostService.update(postId, title, content, hashtags, updatedAt);
       res.status(200).json(response.UPDATE);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  static async deletePost(req, res) {
+    const userId = req.user.id;
+    const { postId } = req.body;
+    try {
+      const writer = await PostService.getPostWriter(postId);
+      if (userId != writer) {
+        res.status(403).json(response.FORBIDDEN);
+      }
+      await PostService.delete(postId);
+      res.status(200).json(response.DELETE);
     } catch (err) {
       console.log(err);
       res.status(500).json(response.INTERNAL_SERVER_ERROR);
