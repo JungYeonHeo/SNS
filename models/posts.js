@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
       });
       posts.hasMany(models.hashtags, {
-        foreignKey: "postId"
+        foreignKey: "id"
       });
     }
   }

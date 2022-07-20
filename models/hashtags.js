@@ -4,20 +4,17 @@ module.exports = (sequelize, DataTypes) => {
   class hashtags extends Model {
     static associate(models) {
       hashtags.belongsTo(models.posts, {
-        foreignKey: { name: "PostId", allowNull: false },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-      });
-      hashtags.belongsTo(models.tags, {
-        foreignKey: { name: "tagId", allowNull: false },
+        foreignKey: { name: "postId", allowNull: false },
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
     }
   }
   hashtags.init({
+      tag: DataTypes.STRING, 
     },{
       sequelize,
+      timestamps: false,
       modelName: "hashtags",
     }
   );

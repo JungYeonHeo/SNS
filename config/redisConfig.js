@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const pool2 = {
+const pool = {
   redisInfo: {
     host: process.env.REDIS_URL,
     port: process.env.REDIS_PORT,
@@ -10,4 +10,4 @@ const pool2 = {
   }
 };
 
-module.exports = pool2;
+module.exports = pool;

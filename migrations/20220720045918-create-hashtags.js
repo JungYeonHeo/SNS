@@ -2,6 +2,12 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("hashtags", {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
       postId: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -9,19 +15,13 @@ module.exports = {
         onUpdate: "CASCADE",
         references: {
           model: "posts",
-          key: "postId"
+          key: "id"
         },
       },
-      tagId: {
+      tag: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-        references: {
-          model: "tags",
-          key: "tagId"
-        },
-      },
+        type: Sequelize.STRING,
+      }
     });
   },
   async down(queryInterface, Sequelize) {
