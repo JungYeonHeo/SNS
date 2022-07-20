@@ -3,7 +3,7 @@ const router = express.Router();
 const PostController = require("../controllers/post.controller");
 
 router.post("/create", PostController.createPost);
-router.patch("/update");
+router.patch("/update", PostController.updatePost);
 router.patch("/delete");
 router.get("/detail");
 router.get("/list");
