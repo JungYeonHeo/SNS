@@ -17,7 +17,7 @@ class PostService {
     }
   }
 
-  static async getPostWriter(postId) {
+  static async getWriter(postId) {
     try {
       const writer = await models.posts.findOne({ attributes: ["userId"], }, { where: {id: postId} });
       return writer.getDataValue("userId");
@@ -42,6 +42,31 @@ class PostService {
   static async delete(postId) {
     try {
       await models.posts.update({ state: 1 }, { where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async setAddViews(postId) {
+    try {
+      await models.posts.increment({ views: 1 }, { where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getDetail(postId) {
+    try {
+      const detailInfo = await models.posts.findOne({ include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: true
+      }],
+      attributes: ["id", "userId", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: { id: postId }, group: "posts.id", raw: true, });
+      return detailInfo;
     } catch (err) {
       throw err;
     }

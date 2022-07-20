@@ -7,7 +7,8 @@ const development = {
   database: env.MYSQL_DATABASE,
   host: env.MYSQL_HOST,
   dialect: env.DB_TYPE,
-  port: env.MYSQL_PORT
+  port: env.MYSQL_PORT,
+  timezone: "+09:00"
 };
 
 const production = {
@@ -16,7 +17,8 @@ const production = {
   database: env.MYSQL_DATABASE,
   host: env.MYSQL_HOST,
   dialect: env.DB_TYPE,
-  port: env.MYSQL_PORT
+  port: env.MYSQL_PORT,
+  timezone: "+09:00"
 };
 
 const test = {
@@ -25,7 +27,8 @@ const test = {
   database: env.MYSQL_DATABASE,
   host: env.MYSQL_HOST,
   dialect: env.DB_TYPE,
-  port: env.MYSQL_PORT
+  port: env.MYSQL_PORT,
+  timezone: "+09:00"
 };
 
 module.exports = { development, production, test };

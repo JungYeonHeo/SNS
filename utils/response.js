@@ -5,5 +5,6 @@ module.exports = {
   INTERNAL_SERVER_ERROR: { status: 500, message: "Internal Server Error", detail: "서버 에러입니다. 관리자에게 문의하세요." },
   CREATE: { message: "포스팅 되었습니다." },
   UPDATE: { message: "게시글이 수정되었습니다." },
-  DELETE: { message: "게시글이 삭제되었습니다. 삭제된 게시글은 복원할 수 있습니다." }
+  DELETE: { message: "게시글이 삭제되었습니다. 삭제된 게시글은 복원할 수 있습니다." },
+  DETAIL: "상세정보가 조회되었습니다."
 };

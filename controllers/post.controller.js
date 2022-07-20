@@ -17,9 +17,10 @@ class PostController {
 
   static async updatePost(req, res) {
     const userId = req.user.id;
-    const { postId, title, content, hashtags } = req.body;
+    const postId = req.params.id;
+    const { title, content, hashtags } = req.body;
     try {
-      const writer = await PostService.getPostWriter(postId);
+      const writer = await PostService.getWriter(postId);
       if (userId != writer) {
         res.status(403).json(response.FORBIDDEN);
       }
@@ -34,14 +35,29 @@ class PostController {
 
   static async deletePost(req, res) {
     const userId = req.user.id;
-    const { postId } = req.body;
+    const postId = req.params.id;
     try {
-      const writer = await PostService.getPostWriter(postId);
+      const writer = await PostService.getWriter(postId);
       if (userId != writer) {
         res.status(403).json(response.FORBIDDEN);
       }
       await PostService.delete(postId);
       res.status(200).json(response.DELETE);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  static async detailPost(req, res) {
+    const postId = req.params.id;
+    try {
+      await PostService.setAddViews(postId);
+      const detailPostInfo = await PostService.getDetail(postId); 
+      res.status(200).json({
+        message: response.DETAIL, 
+        detailInfo: detailPostInfo
+      });
     } catch (err) {
       console.log(err);
       res.status(500).json(response.INTERNAL_SERVER_ERROR);
