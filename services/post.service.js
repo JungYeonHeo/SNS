@@ -71,6 +71,49 @@ class PostService {
       throw err;
     }
   }
+
+  static async getClickedLikePost(postId, userId) {
+    try {
+      const isClickedLikePost = await models.postLikes.findOne({ where: {[Op.and]: [{ postId: postId}, { userId: userId }]} });
+      if (isClickedLikePost == null) {
+        return false;
+      } return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async setAddLikes(postId) {
+    try {
+      await models.posts.increment({ likes: 1 }, { where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddLikeUser(postId, userId) {
+    try {
+      await models.postLikes.create({ postId: postId, userId: userId });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusLikes(postId) {
+    try {
+      await models.posts.increment({ likes: -1 }, { where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusLikeUser(postId, userId) {
+    try {
+      await models.postLikes.destroy({ where: {[Op.and]: [{ postId: postId}, { userId: userId }]} });
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = PostService;

@@ -63,6 +63,30 @@ class PostController {
       res.status(500).json(response.INTERNAL_SERVER_ERROR);
     }
   }
+
+  static async likePost(req, res) {
+    const postId = req.params.id;
+    const userId = req.user.id;
+    try {
+      const isClickedLikePost = await PostService.getClickedLikePost(postId, userId);
+      if (isClickedLikePost) {
+        await PostService.setMinusLikes(postId);
+        await PostService.setMinusLikeUser(postId, userId);
+        res.status(200).json({
+          message: response.LIKE_CANCEL
+        });
+      } else {
+        await PostService.setAddLikes(postId);
+        await PostService.setAddLikeUser(postId, userId);
+        res.status(200).json({
+          message: response.LIKE
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 module.exports = PostController;

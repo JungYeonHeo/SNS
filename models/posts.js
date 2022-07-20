@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       posts.hasMany(models.hashtags, {
         foreignKey: "postId"
       });
+      posts.hasMany(models.postLikes, {
+        foreignKey: "postId"
+      });
     }
   }
   posts.init({

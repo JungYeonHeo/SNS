@@ -7,7 +7,7 @@ router.patch("/update/:id", PostController.updatePost);
 router.patch("/delete/:id", PostController.deletePost);
 router.get("/detail/:id", PostController.detailPost);
 router.get("/list");
-router.patch("/like");
+router.patch("/like/:id", PostController.likePost);
 router.get("/deletedList");
 router.patch("/restore");
 

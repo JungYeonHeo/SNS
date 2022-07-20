@@ -6,5 +6,7 @@ module.exports = {
   CREATE: { message: "포스팅 되었습니다." },
   UPDATE: { message: "게시글이 수정되었습니다." },
   DELETE: { message: "게시글이 삭제되었습니다. 삭제된 게시글은 복원할 수 있습니다." },
-  DETAIL: "상세정보가 조회되었습니다."
+  DETAIL: "상세정보가 조회되었습니다.",
+  LIKE: "해당 게시글에 좋아요를 표시했습니다.", 
+  LIKE_CANCEL: "해당 게시글에 좋아요를 취소했습니다."
 };
