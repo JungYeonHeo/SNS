@@ -4,7 +4,7 @@ require("date-utils");
 
 class PostController {
   static async createPost(req, res) {
-    const userId = req.user.id;
+    const userId = "qwer1234@naver.com" // req.user.id;
     const { title, content, hashtags } = req.body;
     try {
       await PostService.create(userId, title, content, hashtags);
@@ -16,7 +16,7 @@ class PostController {
   }
 
   static async updatePost(req, res) {
-    const userId = req.user.id;
+    const userId = "qwer1234@naver.com" // req.user.id;
     const postId = req.params.id;
     const { title, content, hashtags } = req.body;
     try {
@@ -34,7 +34,7 @@ class PostController {
   }
 
   static async deletePost(req, res) {
-    const userId = req.user.id;
+    const userId = "qwer1234@naver.com" // req.user.id;
     const postId = req.params.id;
     try {
       const writer = await PostService.getWriter(postId);
@@ -66,7 +66,7 @@ class PostController {
 
   static async likePost(req, res) {
     const postId = req.params.id;
-    const userId = req.user.id;
+    const userId = "qwer1234@naver.com" // req.user.id;
     try {
       const isClickedLikePost = await PostService.getClickedLikePost(postId, userId);
       if (isClickedLikePost) {
@@ -85,7 +85,7 @@ class PostController {
   }
 
   static async deletedListPost(req, res) {
-    const userId = req.user.id;
+    const userId = "qwer1234@naver.com" // req.user.id;
     try {
       const deletedListInfo = await PostService.getDeletedList(userId);
       if (deletedListInfo.length == 0) {
@@ -104,7 +104,7 @@ class PostController {
 
   static async restorePost(req, res) {
     const postId = req.params.id;
-    const userId = req.user.id;
+    const userId = "qwer1234@naver.com" // req.user.id;
     try {
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
@@ -124,8 +124,8 @@ class PostController {
     if (sort == undefined) { sort = "createdAt"; }
     if (orderBy == undefined) { orderBy = "desc"; }
     if (hashtags == undefined) { hashtags = null; }
-    if (perPage == undefined) { perPage = 10; }
-    if (page == undefined) { page = 1; }
+    if (perPage == undefined) { perPage = 10; } else  { perPage *= 1 }
+    if (page == undefined) { page = 1; } else { page *= 1 }
     const filter = { search: search, sort: sort, orderBy: orderBy, hashtags: hashtags, perPage: perPage, page: page };
     try {
       const listInfo = await PostService.getList(search, sort, orderBy, hashtags, perPage, page);
