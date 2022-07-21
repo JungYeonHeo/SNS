@@ -8,7 +8,7 @@ router.patch("/delete/:id", PostController.deletePost);
 router.get("/detail/:id", PostController.detailPost);
 router.get("/list");
 router.patch("/like/:id", PostController.likePost);
-router.get("/deletedList");
+router.get("/deletedList", PostController.deletedListPost);
 router.patch("/restore");
 
 module.exports = router;

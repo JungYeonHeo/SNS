@@ -87,6 +87,26 @@ class PostController {
       res.status(500).json(response.INTERNAL_SERVER_ERROR);
     }
   }
+
+  static async deletedListPost(req, res) {
+    const userId = req.user.id;
+    try {
+      const deletedListInfo = await PostService.getDeletedList(userId);
+      if (deletedListInfo.length == 0) {
+        res.status(200).json({
+          message: response.DELETE_LIST_NONE, 
+        });
+      } else {
+        res.status(200).json({
+          message: response.DELETE_LIST, 
+          deletedListInfo: deletedListInfo
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
 
 module.exports = PostController;

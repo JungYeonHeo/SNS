@@ -6,7 +6,7 @@ class PostService {
     try {
       const getCreatePost = await models.posts.create({ userId: userId, title: title, content: content });
       const postId = getCreatePost.getDataValue("id");
-      if (postId) {
+      if (postId && hashtags != "") { // 해시태그를 입력하지 않았을 때 빈값이 들어가는 것을 방지
         const hashtagArr = hashtags.split(",");
         for (const tag of hashtagArr) {
           await models.hashtags.create({ postId: postId, tag: tag });
@@ -60,7 +60,7 @@ class PostService {
       const detailInfo = await models.posts.findOne({ include: [{
         model: models.hashtags,
         attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
-        required: true
+        required: false // 해시태그 없으면 값이 안나오는 것을 방지하기 위해 Left Outer Join 사용
       }],
       attributes: ["id", "userId", "title", "content", "likes", "views",
       [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
@@ -109,7 +109,26 @@ class PostService {
 
   static async setMinusLikeUser(postId, userId) {
     try {
-      await models.postLikes.destroy({ where: {[Op.and]: [{ postId: postId}, { userId: userId }]} });
+      await models.postLikes.destroy({ where: {[Op.and]: [{ postId: postId }, { userId: userId }]} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getDeletedList(userId) {
+    try {
+      const deletedListInfo = await models.posts.findAll({ include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: false // 해시태그 없으면 값이 안나오는 것을 방지하기 위해 Left Outer Join 사용
+      }],
+      attributes: ["id", "userId", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: {[Op.and]: [{ state: 1 }, { userId: userId }]}, group: "posts.id", raw: true, });
+      if (deletedListInfo == []) {
+        return [];
+      } return deletedListInfo;
     } catch (err) {
       throw err;
     }
