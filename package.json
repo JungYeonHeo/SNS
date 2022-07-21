@@ -19,9 +19,12 @@
   "homepage": "https://github.com/golgol22/SNS#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "date-utils": "^1.2.21",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "morgan": "^1.10.0",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "redis": "^4.2.0",
+    "sequelize": "^6.21.3"
   }
 }

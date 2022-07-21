@@ -1,22 +1,26 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class hashtags extends Model {
+  class postLikes extends Model {
     static associate(models) {
-      hashtags.belongsTo(models.posts, {
+      postLikes.belongsTo(models.users, {
+        foreignKey: { name: "userId", allowNull: false },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      postLikes.belongsTo(models.posts, {
         foreignKey: { name: "postId", allowNull: false },
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
     }
   }
-  hashtags.init({
-      tag: DataTypes.STRING, 
-    },{
+  postLikes.init({
+  }, {
       sequelize,
       timestamps: false,
-      modelName: "hashtags",
+      modelName: "postLikes",
     }
   );
-  return hashtags;
+  return postLikes;
 };

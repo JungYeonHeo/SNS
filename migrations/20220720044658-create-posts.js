@@ -2,7 +2,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("posts", {
-      postId: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -49,6 +49,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("now()"),
       },
     });
   },

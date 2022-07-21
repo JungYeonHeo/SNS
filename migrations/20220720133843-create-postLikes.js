@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("hashtags", {
+    await queryInterface.createTable("postLikes", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,16 +15,22 @@ module.exports = {
         onUpdate: "CASCADE",
         references: {
           model: "posts",
-          key: "id"
+          key: "id",
         },
       },
-      tag: {
+      userId: {
         allowNull: false,
         type: Sequelize.STRING,
-      }
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        references: {
+          model: "users",
+          key: "userId",
+        },
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("hashtags");
+    await queryInterface.dropTable("postLikes");
   },
 };
