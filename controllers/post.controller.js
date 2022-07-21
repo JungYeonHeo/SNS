@@ -117,6 +117,23 @@ class PostController {
       res.status(500).json({message: response.RESTORE_FAIL});
     }
   }
+
+  static async listPost(req, res) {
+    try {
+      const listInfo = await PostService.getList();
+      if (listInfo.length == 0) {
+        res.status(200).json({message: response.LIST_NONE});
+      } else {
+        res.status(200).json({
+          message: response.LIST, 
+          listInfo: listInfo
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({message: response.LIST_FAIL});
+    }
+  }
 }
 
 module.exports = PostController;

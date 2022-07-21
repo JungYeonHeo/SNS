@@ -141,6 +141,25 @@ class PostService {
       throw err;
     }
   }
+  
+  static async getList() {
+    try {
+      const listInfo = await models.posts.findAll({ include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: false // 해시태그 없으면 값이 안나오는 것을 방지하기 위해 Left Outer Join 사용
+      }],
+      attributes: ["id", "userId", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: { state: 0 }, group: "posts.id", raw: true, });
+      if (listInfo == []) {
+        return [];
+      } return listInfo;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = PostService;

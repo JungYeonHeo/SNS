@@ -6,7 +6,7 @@ router.post("/create", PostController.createPost);
 router.patch("/update/:id", PostController.updatePost);
 router.patch("/delete/:id", PostController.deletePost);
 router.get("/detail/:id", PostController.detailPost);
-router.get("/list");
+router.get("/list", PostController.listPost);
 router.patch("/like/:id", PostController.likePost);
 router.get("/deletedList", PostController.deletedListPost);
 router.patch("/restore/:id", PostController.restorePost);
