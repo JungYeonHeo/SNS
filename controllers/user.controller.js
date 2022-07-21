@@ -1,9 +1,14 @@
 const UserService = require("../services/user.service");
 const response = require("../utils/response");
 const bcrypt = require("bcrypt");
+const { validationResult } = require("express-validator");
 
 class UserController {
   static async joinUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
     const { userId, userPw, userName } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashPw = await bcrypt.hash(userPw, salt); 
@@ -22,15 +27,19 @@ class UserController {
   }
 
   static async loginUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
     const { userId, userPw } = req.body;
     try {
       const userInfo = await UserService.getUserInfo(userId);
       if (!userInfo) {
-        return res.status(400).json({message: response.LOGIN_NO_MATCH});
+        return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const isMatch = await bcrypt.compare(userPw, userInfo.userPw);
       if (!isMatch) {
-        return res.status(400).json({message: response.LOGIN_NO_MATCH});
+        return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       res.status(200).json({message: response.LOGIN});
     } catch (err) {

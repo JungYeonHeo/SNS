@@ -28,4 +28,8 @@ module.exports = {
   LOGIN: "로그인 되었습니다.",
   LOGIN_NO_MATCH: "아이디나 비밀번호가 일치하지 않습니다.", 
   LOGIN_FAIL: "로그인에 실패하였습니다.",
+  EMAIL_WARNING: "이메일 형식에 맞게 작성해주세요.", 
+  PW_WARNING: "최소 8자리 이상: 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 조합", 
+  COMFIRM_PW_WARNING: "비밀번호와 일치하지 않습니다.", 
+  NAME_WARNING: "2글자이상 10글자미만으로 작성해주세요.",
 };

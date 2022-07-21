@@ -5,7 +5,7 @@ class UserService {
 
   static async isJoined(userId) {
     try {
-      return await models.users.findOne({ attributes: ["userId"], }, { where: {userId: userId} });
+      return await models.users.findOne({ where: { userId: userId } });
     } catch (err) {
       throw err;
     }
@@ -21,7 +21,7 @@ class UserService {
 
   static async getUserInfo(userId) {
     try { 
-      return await models.users.findOne({ where: {userId: userId} });
+      return await models.users.findOne({ where: { userId: userId } });
     } catch (err) {
       throw err;
     }

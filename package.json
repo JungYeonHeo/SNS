@@ -23,6 +23,7 @@
     "date-utils": "^1.2.21",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "express-validator": "^6.14.2",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "redis": "^4.2.0",
