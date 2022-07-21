@@ -119,13 +119,25 @@ class PostController {
   }
 
   static async listPost(req, res) {
+    let { search, sort, orderBy, hashtags, perPage, page } = req.query;
+    if (search == undefined) { search = ""; } 
+    if (sort == undefined) { sort = "createdAt"; }
+    if (orderBy == undefined) { orderBy = "desc"; }
+    if (hashtags == undefined) { hashtags = null; }
+    if (perPage == undefined) { perPage = 10; }
+    if (page == undefined) { page = 1; }
+    const filter = { search: search, sort: sort, orderBy: orderBy, hashtags: hashtags, perPage: perPage, page: page };
     try {
-      const listInfo = await PostService.getList();
+      const listInfo = await PostService.getList(search, sort, orderBy, hashtags, perPage, page);
       if (listInfo.length == 0) {
-        res.status(200).json({message: response.LIST_NONE});
+        res.status(200).json({
+          message: response.LIST_NONE, 
+          filer: filter
+        });
       } else {
         res.status(200).json({
           message: response.LIST, 
+          filter: filter,
           listInfo: listInfo
         });
       }
