@@ -22,4 +22,10 @@ module.exports = {
   LIST: "게시글 목록을 조회했습니다.",
   LIST_NONE: "게시글이 없습니다.",
   LIST_FAIL: "게시글 조회에 실패하였습니다. 잠시 후 다시 시도해주세요.",
+  JOIN_ID_DUPLICATE: "이미 사용중인 이메일입니다.",
+  JOIN: "회원가입이 되었습니다.",
+  JOIN_FAIL: "회원가입에 실패하였습니다.",
+  LOGIN: "로그인 되었습니다.",
+  LOGIN_NO_MATCH: "아이디나 비밀번호가 일치하지 않습니다.", 
+  LOGIN_FAIL: "로그인에 실패하였습니다.",
 };

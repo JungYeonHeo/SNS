@@ -1,5 +1,5 @@
 const models = require("../models");
-const { Op } = require("sequelize")
+const { Op } = require("sequelize");
 const makeSearchWord = require("../utils/makeSearchWord");
 
 

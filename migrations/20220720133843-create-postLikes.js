@@ -28,6 +28,16 @@ module.exports = {
           key: "userId",
         },
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("now()"),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("now()"),
+      },
     });
   },
   async down(queryInterface, Sequelize) {

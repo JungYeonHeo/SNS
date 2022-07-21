@@ -8,7 +8,7 @@ class PostController {
     const { title, content, hashtags } = req.body;
     try {
       await PostService.create(userId, title, content, hashtags);
-      res.status(200).json({message: response.CREATE});
+      res.status(201).json({message: response.CREATE});
     } catch (err) {
       console.log(err);
       res.status(500).json({message: response.CREATE_FAIL});
@@ -65,8 +65,8 @@ class PostController {
   }
 
   static async likePost(req, res) {
-    const postId = req.params.id;
     const userId = req.user.id;
+    const postId = req.params.id;
     try {
       const isClickedLikePost = await PostService.getClickedLikePost(postId, userId);
       if (isClickedLikePost) {

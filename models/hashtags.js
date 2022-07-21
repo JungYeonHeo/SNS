@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       tag: DataTypes.STRING, 
     },{
       sequelize,
-      timestamps: false,
       modelName: "hashtags",
     }
   );
