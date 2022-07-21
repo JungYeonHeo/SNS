@@ -1,6 +1,7 @@
 const models = require("../models");
 const { Op } = require("sequelize")
-const hashtags = models["hashtags"]
+const makeSearchWord = require("../utils/makeSearchWord");
+
 
 class PostService {
   static async create(userId, title, content, hashtags) {
@@ -148,8 +149,7 @@ class PostService {
     if (page > 1) {
       offset = 10 * (page - 1);
     }
-    const searchKeyword = "%" + search + "%";
-    
+    const searchKeyword = makeSearchWord(search);
     let query = true; // 해시태그 없을때 조회할 조건
     if (hashtags != null) {  
       let searchHashtag = hashtags.split(",");
@@ -165,7 +165,7 @@ class PostService {
       attributes: ["id", "userId", "title", "content", "likes", "views",
       [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
       [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
-      where: {[Op.and]: [{ state: 0 }, {title: { [Op.like]: searchKeyword }}, models.sequelize.literal(query) ]},
+      where: {[Op.and]: [{ state: 0 }, {title: { [Op.regexp]: `${searchKeyword}` }}, models.sequelize.literal(query) ]},
       group: "posts.id", order: [[sort, orderBy]], offset: offset, limit: perPage, subQuery: false, raw: true });
       if (listInfo == []) {
         return [];
