@@ -9,6 +9,6 @@ router.get("/detail/:id", PostController.detailPost);
 router.get("/list");
 router.patch("/like/:id", PostController.likePost);
 router.get("/deletedList", PostController.deletedListPost);
-router.patch("/restore");
+router.patch("/restore/:id", PostController.restorePost);
 
 module.exports = router;

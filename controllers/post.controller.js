@@ -8,10 +8,10 @@ class PostController {
     const { title, content, hashtags } = req.body;
     try {
       await PostService.create(userId, title, content, hashtags);
-      res.status(200).json(response.CREATE);
+      res.status(200).json({message: response.CREATE});
     } catch (err) {
       console.log(err);
-      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+      res.status(500).json({message: response.CREATE_FAIL});
     }
   }
 
@@ -26,10 +26,10 @@ class PostController {
       }
       const updatedAt = new Date().toFormat("YYYY-MM-DD HH:MI:SS");
       await PostService.update(postId, title, content, hashtags, updatedAt);
-      res.status(200).json(response.UPDATE);
+      res.status(200).json({message: response.UPDATE});
     } catch (err) {
       console.log(err);
-      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+      res.status(500).json({message: response.UPDATE_FAIL});
     }
   }
 
@@ -42,10 +42,10 @@ class PostController {
         res.status(403).json(response.FORBIDDEN);
       }
       await PostService.delete(postId);
-      res.status(200).json(response.DELETE);
+      res.status(200).json({message: response.DELETE});
     } catch (err) {
       console.log(err);
-      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+      res.status(500).json({message: response.DELETE_FAIL});
     }
   }
 
@@ -60,7 +60,7 @@ class PostController {
       });
     } catch (err) {
       console.log(err);
-      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+      res.status(500).json({message: response.DETAIL_FAIL});
     }
   }
 
@@ -72,19 +72,15 @@ class PostController {
       if (isClickedLikePost) {
         await PostService.setMinusLikes(postId);
         await PostService.setMinusLikeUser(postId, userId);
-        res.status(200).json({
-          message: response.LIKE_CANCEL
-        });
+        res.status(200).json({message: response.LIKE_CANCEL});
       } else {
         await PostService.setAddLikes(postId);
         await PostService.setAddLikeUser(postId, userId);
-        res.status(200).json({
-          message: response.LIKE
-        });
+        res.status(200).json({message: response.LIKE});
       }
     } catch (err) {
       console.log(err);
-      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+      res.status(500).json({message: response.LIKE_FAIL});
     }
   }
 
@@ -93,9 +89,7 @@ class PostController {
     try {
       const deletedListInfo = await PostService.getDeletedList(userId);
       if (deletedListInfo.length == 0) {
-        res.status(200).json({
-          message: response.DELETE_LIST_NONE, 
-        });
+        res.status(200).json({message: response.DELETE_LIST_NONE});
       } else {
         res.status(200).json({
           message: response.DELETE_LIST, 
@@ -104,7 +98,23 @@ class PostController {
       }
     } catch (err) {
       console.log(err);
-      res.status(500).json(response.INTERNAL_SERVER_ERROR);
+      res.status(500).json({message: response.DELETE_LIST_FAIL});
+    }
+  }
+
+  static async restorePost(req, res) {
+    const postId = req.params.id;
+    const userId = req.user.id;
+    try {
+      const writer = await PostService.getWriter(postId);
+      if (userId != writer) {
+        res.status(403).json(response.FORBIDDEN);
+      }
+      await PostService.setRestorePost(postId);
+      res.status(200).json({message: response.RESTORE});
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({message: response.RESTORE_FAIL});
     }
   }
 }

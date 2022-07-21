@@ -133,6 +133,14 @@ class PostService {
       throw err;
     }
   }
+
+  static async setRestorePost(postId) {
+    try {
+      await models.posts.update({ state: 0 }, { where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = PostService;
