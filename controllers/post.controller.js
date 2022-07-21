@@ -39,7 +39,7 @@ class PostController {
     try {
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
-        res.status(403).json(response.FORBIDDEN);
+        return res.status(403).json(response.FORBIDDEN);
       }
       await PostService.delete(postId);
       res.status(200).json({message: response.DELETE});
@@ -72,12 +72,11 @@ class PostController {
       if (isClickedLikePost) {
         await PostService.setMinusLikes(postId);
         await PostService.setMinusLikeUser(postId, userId);
-        res.status(200).json({message: response.LIKE_CANCEL});
-      } else {
-        await PostService.setAddLikes(postId);
-        await PostService.setAddLikeUser(postId, userId);
-        res.status(200).json({message: response.LIKE});
-      }
+        return res.status(200).json({message: response.LIKE_CANCEL});
+      } 
+      await PostService.setAddLikes(postId);
+      await PostService.setAddLikeUser(postId, userId);
+      res.status(200).json({message: response.LIKE});
     } catch (err) {
       console.log(err);
       res.status(500).json({message: response.LIKE_FAIL});
@@ -89,13 +88,12 @@ class PostController {
     try {
       const deletedListInfo = await PostService.getDeletedList(userId);
       if (deletedListInfo.length == 0) {
-        res.status(200).json({message: response.DELETE_LIST_NONE});
-      } else {
-        res.status(200).json({
-          message: response.DELETE_LIST, 
-          deletedListInfo: deletedListInfo
-        });
-      }
+        return res.status(200).json({message: response.DELETE_LIST_NONE});
+      } 
+      res.status(200).json({
+        message: response.DELETE_LIST, 
+        deletedListInfo: deletedListInfo
+      });
     } catch (err) {
       console.log(err);
       res.status(500).json({message: response.DELETE_LIST_FAIL});
@@ -108,7 +106,7 @@ class PostController {
     try {
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
-        res.status(403).json(response.FORBIDDEN);
+        return res.status(403).json(response.FORBIDDEN);
       }
       await PostService.setRestorePost(postId);
       res.status(200).json({message: response.RESTORE});
@@ -130,17 +128,16 @@ class PostController {
     try {
       const listInfo = await PostService.getList(search, sort, orderBy, hashtags, perPage, page);
       if (listInfo.length == 0) {
-        res.status(200).json({
+        return res.status(200).json({
           message: response.LIST_NONE, 
           filer: filter
         });
-      } else {
-        res.status(200).json({
-          message: response.LIST, 
-          filter: filter,
-          listInfo: listInfo
-        });
-      }
+      } 
+      res.status(200).json({
+        message: response.LIST, 
+        filter: filter,
+        listInfo: listInfo
+      });
     } catch (err) {
       console.log(err);
       res.status(500).json({message: response.LIST_FAIL});

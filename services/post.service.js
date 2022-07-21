@@ -65,8 +65,8 @@ class PostService {
         required: false // 해시태그 없으면 값이 안나오는 것을 방지하기 위해 Left Outer Join 사용
       }],
       attributes: ["id", "userId", "title", "content", "likes", "views",
-      [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
-      [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: { id: postId }, group: "posts.id", raw: true });
       return detailInfo;
     } catch (err) {
@@ -125,8 +125,8 @@ class PostService {
         required: false 
       }],
       attributes: ["id", "title", "content", "likes", "views",
-      [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
-      [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{ state: 1 }, { userId: userId }]}, group: "posts.id", raw: true });
       if (deletedListInfo == []) {
         return [];
@@ -163,8 +163,8 @@ class PostService {
         required: false 
       }],
       attributes: ["id", "userId", "title", "content", "likes", "views",
-      [models.sequelize.fn("date_format", models.sequelize.col("createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
-      [models.sequelize.fn("date_format", models.sequelize.col("updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{ state: 0 }, {title: { [Op.regexp]: `${searchKeyword}` }}, models.sequelize.literal(query) ]},
       group: "posts.id", order: [[sort, orderBy]], offset: offset, limit: perPage, subQuery: false, raw: true });
       if (listInfo == []) {
