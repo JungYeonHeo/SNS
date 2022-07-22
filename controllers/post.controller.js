@@ -20,9 +20,13 @@ class PostController {
     const postId = req.params.id;
     const { title, content, hashtags } = req.body;
     try {
+      const isExist = await PostService.getById(postId);
+      if (!isExist) { 
+        return res.status(404).json(response.NOT_FOUND);
+      }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
-        res.status(403).json(response.FORBIDDEN);
+        return res.status(403).json(response.FORBIDDEN);
       }
       const updatedAt = new Date().toFormat("YYYY-MM-DD HH:MI:SS");
       await PostService.update(postId, title, content, hashtags, updatedAt);
@@ -37,6 +41,10 @@ class PostController {
     const userId = req.user.id;
     const postId = req.params.id;
     try {
+      const isExist = await PostService.getById(postId);
+      if (!isExist) { 
+        return res.status(404).json(response.NOT_FOUND);
+      }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
         return res.status(403).json(response.FORBIDDEN);
@@ -52,6 +60,10 @@ class PostController {
   static async detailPost(req, res) {
     const postId = req.params.id;
     try {
+      const isExist = await PostService.getById(postId);
+      if (!isExist) { 
+        return res.status(404).json(response.NOT_FOUND);
+      }
       await PostService.setAddViews(postId);
       const detailPostInfo = await PostService.getDetail(postId); 
       res.status(200).json({
@@ -68,6 +80,10 @@ class PostController {
     const userId = req.user.id;
     const postId = req.params.id;
     try {
+      const isExist = await PostService.getById(postId);
+      if (!isExist) { 
+        return res.status(404).json(response.NOT_FOUND);
+      }
       const isClickedLikePost = await PostService.getClickedLikePost(postId, userId);
       if (isClickedLikePost) {
         await PostService.setMinusLikes(postId);
@@ -104,6 +120,10 @@ class PostController {
     const postId = req.params.id;
     const userId = req.user.id;
     try {
+      const isExist = await PostService.getById(postId);
+      if (!isExist) { 
+        return res.status(404).json(response.NOT_FOUND);
+      }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
         return res.status(403).json(response.FORBIDDEN);

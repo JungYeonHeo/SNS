@@ -28,6 +28,14 @@ class PostService {
     }
   }
 
+  static async getById(postId) {
+    try {
+      return await models.posts.findOne({ where: {id: postId} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async update(postId, title, content, hashtags, updatedAt) {
     try {
       await models.posts.update({ title: title, content: content, updatedAt: updatedAt }, { where: {id: postId} });
