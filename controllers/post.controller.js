@@ -37,8 +37,7 @@ class PostController {
       if (userId != writer) {
         return res.status(403).json(response.FORBIDDEN);
       }
-      const updatedAt = new Date().toFormat("YYYY-MM-DD HH:MI:SS");
-      await PostService.update(postId, title, content, hashtags, updatedAt);
+      await PostService.update(postId, title, content, hashtags);
       res.status(200).json({message: response.UPDATE});
     } catch (err) {
       console.log(err);
@@ -67,13 +66,20 @@ class PostController {
   }
 
   static async detailPost(req, res) {
+    const userId = req.user.id;
     const postId = req.params.id;
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
         return res.status(404).json(response.NOT_FOUND);
       }
-      await PostService.setAddViews(postId);
+      const haveSeen = await PostService.getPostLog(postId, userId);
+      if (haveSeen) {
+        await PostService.setAddMyViews(haveSeen.id);
+      } else {
+        await PostService.setPostLog(postId, userId);
+        await PostService.setAddViews(postId);
+      }
       const detailPostInfo = await PostService.getDetail(postId); 
       res.status(200).json({
         message: response.DETAIL, 

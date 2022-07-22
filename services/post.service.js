@@ -36,9 +36,9 @@ class PostService {
     }
   }
 
-  static async update(postId, title, content, hashtags, updatedAt) {
+  static async update(postId, title, content, hashtags) {
     try {
-      await models.posts.update({ title: title, content: content, updatedAt: updatedAt }, { where: {id: postId} });
+      await models.posts.update({ title: title, content: content}, { where: {id: postId} });
       await models.hashtags.destroy({ where: {postId: postId} });
       const hashtagArr = hashtags.split(",");
       for (const tag of hashtagArr) {
@@ -57,6 +57,30 @@ class PostService {
     }
   }
   
+  static async getPostLog(postId, userId) {
+    try {
+      return await models.postLogs.findOne({ where: {[Op.and]: [{ postId: postId }, { userId: userId }]} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setPostLog(postId, userId) {
+    try {
+      return await models.postLogs.create({ postId: postId, userId: userId });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddMyViews(id) {
+    try {
+      await models.postLogs.increment({ userViews: 1 }, { where: {id: id} });
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async setAddViews(postId) {
     try {
       await models.posts.increment({ views: 1 }, { where: {id: postId} });
