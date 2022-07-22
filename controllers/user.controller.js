@@ -2,6 +2,9 @@ const UserService = require("../services/user.service");
 const response = require("../utils/response");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
+const generateAccessToken = require("../utils/generateToken");
+const dotenv = require("dotenv");
+dotenv.config();
 
 class UserController {
   static async joinUser(req, res) {
@@ -41,6 +44,8 @@ class UserController {
       if (!isMatch) {
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
+      const accessToken = generateAccessToken(userId);
+      res.setHeader("authorization", "Bearer " + accessToken);
       res.status(200).json({message: response.LOGIN});
     } catch (err) {
       console.log(err);

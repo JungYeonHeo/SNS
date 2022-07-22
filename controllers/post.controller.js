@@ -130,7 +130,7 @@ class PostController {
       if (listInfo.length == 0) {
         return res.status(200).json({
           message: response.LIST_NONE, 
-          filer: filter
+          filter: filter
         });
       } 
       res.status(200).json({

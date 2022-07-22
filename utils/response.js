@@ -32,4 +32,5 @@ module.exports = {
   PW_WARNING: "최소 8자리 이상: 영어 대문자, 소문자, 숫자, 특수문자 중 3종류 조합", 
   COMFIRM_PW_WARNING: "비밀번호와 일치하지 않습니다.", 
   NAME_WARNING: "2글자이상 10글자미만으로 작성해주세요.",
+  LOGIN_REQUIRED: "로그인을 해주세요.",
 };
