@@ -33,4 +33,11 @@ module.exports = {
   COMFIRM_PW_WARNING: "비밀번호와 일치하지 않습니다.", 
   NAME_WARNING: "2글자이상 10글자미만으로 작성해주세요.",
   LOGIN_REQUIRED: "로그인을 해주세요.",
+  TITLE_EMPTY: "제목을 입력해주세요.",
+  TITLE_LENGTH: "2글자이상 30글자 미만으로 입력해주세요.",
+  CONTENT_EMPTY: "내용을 입력해주세요.",
+  CONTENT_LENGTH: "2글자이상 255글자 미만으로 입력해주세요.",
+  TITLE_INCLUDE_SCRIPT: "제목에 특정 특수문자를 포함할 수 없습니다.",
+  CONTENT_INCLUDE_SCRIPT: "내용에 특정 특수문자를 포함할 수 없습니다.",
+  HASHTAG_INCLUDE_SCRIPT: "해시태그에 특정 특수문자를 포함할 수 없습니다.",
 };

@@ -1,9 +1,14 @@
 const PostService = require("../services/post.service");
 const response = require("../utils/response");
 require("date-utils");
+const { validationResult } = require("express-validator");
 
 class PostController {
   static async createPost(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
     const userId = req.user.id;
     const { title, content, hashtags } = req.body;
     try {
@@ -16,6 +21,10 @@ class PostController {
   }
 
   static async updatePost(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
     const userId = req.user.id;
     const postId = req.params.id;
     const { title, content, hashtags } = req.body;
