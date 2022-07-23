@@ -45,4 +45,6 @@ module.exports = {
   TITLE_INCLUDE_SCRIPT: "제목에 특정 특수문자를 포함할 수 없습니다.",
   CONTENT_INCLUDE_SCRIPT: "내용에 특정 특수문자를 포함할 수 없습니다.",
   HASHTAG_INCLUDE_SCRIPT: "해시태그에 특정 특수문자를 포함할 수 없습니다.",
+  ACCESS_DENIED: "접속이 제한되었습니다.",
+  NOT_BOT: "BOT 접근을 금지합니다.",
 };
