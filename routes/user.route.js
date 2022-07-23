@@ -7,5 +7,6 @@ const isUser = require("../utils/validateJwt");
 router.post("/join", checkJoin, UserController.joinUser);
 router.post("/login", checkLogin, UserController.loginUser);
 router.get("/myInfo", isUser, UserController.myInfoUser);
+router.get("/likeList", isUser, UserController.myLikeListUser);
 
 module.exports = router;

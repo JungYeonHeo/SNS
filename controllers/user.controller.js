@@ -97,6 +97,23 @@ class UserController {
       res.status(500).json({message: response.USER_INFO_FAIL});
     }
   }
+
+  static async myLikeListUser(req, res) {
+    const userId = req.user.id;
+    try {
+      const myLikeList = await UserService.getLikeList(userId);
+      if (myLikeList.length == 0) {
+        return res.status(200).json({message: response.LIKE_LIST_NONE}); 
+      }
+      res.status(200).json({
+        message: response.LIKE_LIST,
+        myLikeList: myLikeList
+      }); 
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({message: response.LIKE_LIST_FAIL});
+    }
+  }
 }
 
 module.exports = UserController;

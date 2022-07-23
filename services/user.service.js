@@ -51,6 +51,26 @@ class UserService {
       throw err;
     }
   }
+
+  static async getLikeList(userId) {
+    try { 
+      const query = `select postId from postLikes where userId = '${userId}'`;
+      const myLikeList = await models.posts.findAll({include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: false 
+      }],
+      attributes: ["id", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: {[Op.and]: [{state: 0}, {id: {[Op.in]: [models.sequelize.literal(query)]}}]}, group: "posts.id", raw: true});
+      if (myLikeList == []) {
+        return [];
+      } return myLikeList;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = UserService;
