@@ -28,6 +28,8 @@ module.exports = {
   LOGIN: "로그인 되었습니다.",
   LOGIN_NO_MATCH: "아이디나 비밀번호가 일치하지 않습니다.", 
   LOGIN_FAIL: "로그인에 실패하였습니다.",
+  USER_INFO: "사용자 정보를 조회했습니다.",
+  USER_INFO_FAIL: "사용자 정보 조회에 실패했습니다.",
   EMAIL_EMPTY: "이메일을 입력해주세요.",
   EMAIL_WARNING: "이메일 형식에 맞게 작성해주세요.", 
   PW_EMPTY: "비밀번호를 입력해주세요.",

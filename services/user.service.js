@@ -28,7 +28,7 @@ class UserService {
   }
 
   static async getAccessInfo(userId, ip, os, device, browser) {
-    // ip, os, device, browser가 모두 일치하면 동일한 정보 정보로 판별
+    // ip, os, device, browser가 모두 일치하면 동일한 접속 정보로 판별
     try { 
       return await models.accessLogs.findOne({where: {[Op.and]: [{userId: userId}, {ip: ip}, {os: os}, {device:device}, {browser: browser}]}});
     } catch (err) {

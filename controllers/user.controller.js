@@ -82,6 +82,21 @@ class UserController {
       res.status(500).json({message: response.LOGIN_FAIL});
     } 
   }
+
+  static async myInfoUser(req, res) {
+    const userId = req.user.id;
+    try {
+      const userInfo = await UserService.getUserInfo(userId);
+      res.status(200).json({
+        message: response.USER_INFO,
+        userId: userInfo.userId,
+        userName: userInfo.userName
+      }); 
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({message: response.USER_INFO_FAIL});
+    }
+  }
 }
 
 module.exports = UserController;
