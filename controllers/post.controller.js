@@ -3,7 +3,6 @@ const PostService = require("../services/post.service");
 const response = require("../utils/response");
 const accessUrl = require("../utils/accessUrl");
 const logger = require("../utils/winston");
-require("date-utils");
 
 class PostController {
   static async createPost(req, res) {
