@@ -162,6 +162,7 @@ class PostController {
 
   static async listPost(req, res) {
     logger.info(accessUrl.LIST);
+    const userId = req.user.id;
     let { search, sort, orderBy, hashtags, perPage, page } = req.query;
     if (search == undefined) { search = ""; } 
     if (sort == undefined) { sort = "createdAt"; }
