@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const logger = require("morgan");
 const index = require("./routes/index");
 const response = require("./utils/response");
 
@@ -15,7 +14,6 @@ class App {
   setMiddleWare() {
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
-    this.app.use(logger("dev"));
     this.app.use(cors());
   }
 

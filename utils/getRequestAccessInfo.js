@@ -2,7 +2,6 @@ const MobileDetect = require("mobile-detect");
 const axios = require("axios");
 const response = require("./response");
 
-// function getRequestAccessInfo(req, res) {
 const getRequestAccessInfo = async (req, res) => {
   /**
    * ip, OS, device, browser, country, city 추출
@@ -32,7 +31,6 @@ const getRequestAccessInfo = async (req, res) => {
       city = res.data.city; 
       country = res.data.country; 
     });
-    console.log({ ip, os, device, browser, country, city });
     return { ip, os, device, browser, country, city };
   } catch (err) {
     throw err;

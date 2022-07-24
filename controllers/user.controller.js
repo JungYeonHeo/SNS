@@ -4,6 +4,8 @@ const { validationResult } = require("express-validator");
 const generateAccessToken = require("../utils/generateToken");
 const getRequestAccessInfo = require("../utils/getRequestAccessInfo");
 const response = require("../utils/response");
+const accessUrl = require("../utils/accessUrl");
+const logger = require("../utils/winston");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -13,6 +15,7 @@ class UserController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
     }
+    logger.info(accessUrl.JOIN);
     const { userId, userPw, userName } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashPw = await bcrypt.hash(userPw, salt); 
@@ -23,11 +26,12 @@ class UserController {
       } else {
         await UserService.join(userId, hashPw, userName);
         const { ip, os, device, browser, country, city }  = await getRequestAccessInfo(req, res);
+        logger.info(`[${accessUrl.JOIN}] {userId: ${userId}, ip: ${ip}, os: ${os}, device: ${device}, browser: ${browser}, country: ${country}, city: ${city}}`);
         await UserService.setAccessInfo(userId, ip, os, device, browser, country, city, 0);
         return res.status(201).json({message: response.JOIN});
       }
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.JOIN}] ${userId} ${err}`);
       res.status(500).json({message: response.JOIN_FAIL});
     } 
   }
@@ -37,6 +41,7 @@ class UserController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
     }
+    logger.info(accessUrl.LOGIN);
     const { userId, userPw } = req.body;
     try {
       const userInfo = await UserService.getUserInfo(userId);
@@ -48,6 +53,7 @@ class UserController {
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const { ip, os, device, browser, country, city } = await getRequestAccessInfo(req, res);
+      logger.info(`[${accessUrl.LOGIN}] {userId: ${userId}, ip: ${ip}, os: ${os}, device: ${device}, browser: ${browser}, country: ${country}, city: ${city}}`);
       const accessInfo = await UserService.getAccessInfo(userId, ip, os, device, browser);
       /**
        * accessLogs.confirm 
@@ -78,12 +84,13 @@ class UserController {
       res.setHeader("authorization", "Bearer " + accessToken);
       return res.status(200).json({message: response.LOGIN});
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.LOGIN}] ${userId} ${err}`);
       res.status(500).json({message: response.LOGIN_FAIL});
     } 
   }
 
   static async myInfoUser(req, res) {
+    logger.info(accessUrl.MYINFO);
     const userId = req.user.id;
     try {
       const userInfo = await UserService.getUserInfo(userId);
@@ -93,12 +100,13 @@ class UserController {
         userName: userInfo.userName
       }); 
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.MYINFO}] ${userId} ${err}`);
       res.status(500).json({message: response.USER_INFO_FAIL});
     }
   }
 
   static async myLikeListUser(req, res) {
+    logger.info(accessUrl.LIKELIST);
     const userId = req.user.id;
     try {
       const myLikeList = await UserService.getLikeList(userId);
@@ -110,7 +118,7 @@ class UserController {
         myLikeList: myLikeList
       }); 
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.LIKELIST}] ${userId} ${err}`);
       res.status(500).json({message: response.LIKE_LIST_FAIL});
     }
   }

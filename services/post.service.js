@@ -5,12 +5,12 @@ const makeSearchWord = require("../utils/makeSearchWord");
 class PostService {
   static async create(userId, title, content, hashtags) {
     try {
-      const getCreatePost = await models.posts.create({ userId: userId, title: title, content: content });
+      const getCreatePost = await models.posts.create({userId: userId, title: title, content: content});
       const postId = getCreatePost.getDataValue("id");
       if (postId && hashtags != "") { // 해시태그를 입력하지 않았을 때 빈값이 들어가는 것을 방지
         const hashtagArr = hashtags.split(",");
         for (const tag of hashtagArr) {
-          await models.hashtags.create({ postId: postId, tag: tag });
+          await models.hashtags.create({postId: postId, tag: tag});
         }
       }
     } catch (err) {

@@ -1,21 +1,24 @@
+const { validationResult } = require("express-validator");
 const PostService = require("../services/post.service");
 const response = require("../utils/response");
+const accessUrl = require("../utils/accessUrl");
+const logger = require("../utils/winston");
 require("date-utils");
-const { validationResult } = require("express-validator");
 
 class PostController {
   static async createPost(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+      return res.status(400).json({message: errors.errors.map((obj) => obj.msg)});
     }
+    logger.info(accessUrl.CREATE);
     const userId = req.user.id;
     const { title, content, hashtags } = req.body;
     try {
       await PostService.create(userId, title, content, hashtags);
       res.status(201).json({message: response.CREATE});
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.CREATE}] ${userId} ${err}`);
       res.status(500).json({message: response.CREATE_FAIL});
     }
   }
@@ -23,8 +26,9 @@ class PostController {
   static async updatePost(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+      return res.status(400).json({message: errors.errors.map((obj) => obj.msg)});
     }
+    logger.info(accessUrl.UPDATE);
     const userId = req.user.id;
     const postId = req.params.id;
     const { title, content, hashtags } = req.body;
@@ -40,12 +44,13 @@ class PostController {
       await PostService.update(postId, title, content, hashtags);
       res.status(200).json({message: response.UPDATE});
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.UPDATE}] ${userId} ${err}`);
       res.status(500).json({message: response.UPDATE_FAIL});
     }
   }
 
   static async deletePost(req, res) {
+    logger.info(accessUrl.DELETE);
     const userId = req.user.id;
     const postId = req.params.id;
     try {
@@ -60,12 +65,13 @@ class PostController {
       await PostService.delete(postId);
       res.status(200).json({message: response.DELETE});
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.DELETE}] ${userId} ${err}`);
       res.status(500).json({message: response.DELETE_FAIL});
     }
   }
 
   static async detailPost(req, res) {
+    logger.info(accessUrl.DETAIL);
     const userId = req.user.id;
     const postId = req.params.id;
     try {
@@ -86,12 +92,13 @@ class PostController {
         detailInfo: detailPostInfo
       });
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.DETAIL}] ${userId} ${err}`);
       res.status(500).json({message: response.DETAIL_FAIL});
     }
   }
 
   static async likePost(req, res) {
+    logger.info(accessUrl.LIKE);
     const userId = req.user.id;
     const postId = req.params.id;
     try {
@@ -109,12 +116,13 @@ class PostController {
       await PostService.setAddLikeUser(postId, userId);
       res.status(200).json({message: response.LIKE});
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.LIKE}] ${userId} ${err}`);
       res.status(500).json({message: response.LIKE_FAIL});
     }
   }
 
   static async deletedListPost(req, res) {
+    logger.info(accessUrl.DELETEDLIST);
     const userId = req.user.id;
     try {
       const deletedListInfo = await PostService.getDeletedList(userId);
@@ -126,12 +134,13 @@ class PostController {
         deletedListInfo: deletedListInfo
       });
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.DELETEDLIST}] ${userId} ${err}`);
       res.status(500).json({message: response.DELETE_LIST_FAIL});
     }
   }
 
   static async restorePost(req, res) {
+    logger.info(accessUrl.RESTORE);
     const postId = req.params.id;
     const userId = req.user.id;
     try {
@@ -146,12 +155,13 @@ class PostController {
       await PostService.setRestorePost(postId);
       res.status(200).json({message: response.RESTORE});
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.RESTORE}] ${userId} ${err}`);
       res.status(500).json({message: response.RESTORE_FAIL});
     }
   }
 
   static async listPost(req, res) {
+    logger.info(accessUrl.LIST);
     let { search, sort, orderBy, hashtags, perPage, page } = req.query;
     if (search == undefined) { search = ""; } 
     if (sort == undefined) { sort = "createdAt"; }
@@ -174,7 +184,7 @@ class PostController {
         listInfo: listInfo
       });
     } catch (err) {
-      console.log(err);
+      logger.error(`[${accessUrl.LIST}] ${userId} ${err}`);
       res.status(500).json({message: response.LIST_FAIL});
     }
   }
