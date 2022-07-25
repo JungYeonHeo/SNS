@@ -180,12 +180,15 @@ class PostService {
     if (page > 1) {
       offset = 10 * (page - 1);
     }
-    const searchKeyword = makeSearchWord(search);
-    let query = true; // 해시태그 없을때 조회할 조건
+    let searchQuery = true; // 검색어 없을 때 조회할 조건
+    if (search != "") {
+      searchQuery = `title regexp '${makeSearchWord(search)}'`;
+    }
+    let hashtagQuery = true; // 해시태그 없을 때 조회할 조건
     if (hashtags != null) {  
       let searchHashtag = hashtags.split(",");
       searchHashtag = searchHashtag.map(x => "'#" + x + "'");
-      query = `posts.id in(select postId from hashtags where tag in(${searchHashtag}) group by postId having count(*) = ${searchHashtag.length})`;
+      hashtagQuery = `posts.id in(select postId from hashtags where tag in(${searchHashtag}) group by postId having count(*) = ${searchHashtag.length})`;
     }
     try {
       const listInfo = await models.posts.findAll({include: [{
@@ -196,7 +199,7 @@ class PostService {
       attributes: ["id", "userId", "title", "content", "likes", "views",
       [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
-      where: {[Op.and]: [{state: 0}, {title: {[Op.regexp]: `${searchKeyword}`}}, models.sequelize.literal(query)]},
+      where: {[Op.and]: [{state: 0}, models.sequelize.literal(searchQuery), models.sequelize.literal(hashtagQuery)]},
       group: "posts.id", order: [[sort, orderBy]], offset: offset, limit: perPage, subQuery: false, raw: true});
       if (listInfo == []) {
         return [];
