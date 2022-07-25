@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
   postLikes.init({
   }, {
       sequelize,
-      timestamps: false,
       modelName: "postLikes",
     }
   );

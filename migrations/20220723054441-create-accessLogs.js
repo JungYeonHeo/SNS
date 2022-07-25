@@ -1,26 +1,49 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("hashtags", {
+    await queryInterface.createTable("accessLogs", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      postId: {
+      userId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
         references: {
-          model: "posts",
-          key: "id"
+          model: "users",
+          key: "userId",
         },
       },
-      tag: {
+      ip: {
         allowNull: false,
         type: Sequelize.STRING,
+      },
+      os: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      device: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      browser: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      country: {
+        type: Sequelize.STRING,
+      },
+      city: {
+        type: Sequelize.STRING,
+      },
+      confirm: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +58,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("hashtags");
+    await queryInterface.dropTable("accessLogs");
   },
 };
