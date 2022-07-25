@@ -21,7 +21,7 @@ class UserService {
 
   static async setAccessInfo(userId, ip, os, device, browser, country, city, confirm) {
     try { 
-      await models.accessLogs.create({userId: userId, ip: ip, os: os, device: device, browser: browser, country: country, city: city, confirm: confirm});
+      return await models.accessLogs.create({userId: userId, ip: ip, os: os, device: device, browser: browser, country: country, city: city, confirm: confirm});
     } catch (err) {
       throw err;
     }

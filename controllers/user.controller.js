@@ -6,8 +6,10 @@ const getRequestAccessInfo = require("../utils/getRequestAccessInfo");
 const response = require("../utils/response");
 const accessUrl = require("../utils/accessUrl");
 const logger = require("../utils/winston");
+const { transporter, loginConfirmOptions } = require("../utils/sendMail");
 const dotenv = require("dotenv");
 dotenv.config();
+require("date-utils");
 
 class UserController {
   static async joinUser(req, res) {
@@ -42,6 +44,7 @@ class UserController {
       return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
     }
     logger.info(accessUrl.LOGIN);
+    const now = new Date().toFormat("YYYY-MM-DD HH:MI");
     const { userId, userPw } = req.body;
     try {
       const userInfo = await UserService.getUserInfo(userId);
@@ -63,21 +66,19 @@ class UserController {
        * 3: 로그인한 접속 정보 - 확인됨 - 본인 아님 (-> 접속 제한)
        * confirm 값이 3이 아닌 경우에는 일단 접속 허용하고 1과 접속 기록에 없는 경우에는 확인 메일을 보낸다.
        */
-      if (accessInfo.confirm == 3) { 
-        return res.status(403).json({message: response.ACCESS_DENIED}); 
-      }
-      if (accessInfo.confirm == 0) {
-        await UserService.setConfirmValue(2, accessInfo.id);
-      }
-      if (accessInfo.confirm == 1 || !accessInfo) { 
-        if (!accessInfo) {
-          await UserService.setAccessInfo(userId, ip, browser, device, country, city, 1);
+      if (accessInfo) {
+        if (accessInfo.confirm == 3) { 
+          return res.status(403).json({message: response.ACCESS_DENIED}); 
         }
-        /** 
-         * TODO: 확인 메일보내고 답변받으면 confirm 상태 값 변경
-         * sendConfirmEmail();
-         * setConfirmValue();
-         */         
+        if (accessInfo.confirm == 0) {
+          await UserService.setConfirmValue(2, accessInfo.id);
+        }
+        if (accessInfo.confirm == 1) { 
+          UserController.sendEmailAfterSetup(userId, accessInfo.id, now, ip, os, device, browser, country, city, res);
+        }
+      } else {
+        const createdAccessInfo = await UserService.setAccessInfo(userId, ip, browser, device, country, city, 1);
+        UserController.sendEmailAfterSetup(userId, createdAccessInfo.id, now, ip, os, device, browser, country, city, res);
       }
       const accessToken = generateAccessToken(userId);
       console.log("Bearer " + accessToken);
@@ -87,6 +88,33 @@ class UserController {
       logger.error(`[${accessUrl.LOGIN}] ${userId} ${err}`);
       res.status(500).json({message: response.LOGIN_FAIL});
     } 
+  }
+
+  static async sendEmailAfterSetup(userId, id, now, ip, os, device, browser, country, city, res) {
+    const confirmAnswer2 = process.env.BASE_URL + `/user/loginConfirm?answer=2&userId=${userId}&id=${id}`;
+    const confirmAnswer3 = process.env.BASE_URL + `/user/loginConfirm?answer=3&userId=${userId}&id=${id}`;
+    loginConfirmOptions.to = userId;
+    loginConfirmOptions.html = `<h2>${response.EMAIL_LOGIN_INFO}</h2>
+    <p>${response.EMAIL_LOGIN_TIME}: ${now}</p>
+    <p>${response.EMAIL_LOGIN_LOCATION}: ${country} ${city} (${ip})</p>
+    <p>${response.EMAIL_LOGIN_DEVICE}: ${device} ${os} ${browser}</p>
+    <hr><p>${response.EMAIL_IS_IT_YOU}</p>
+    <button onclick=\"location.href(${confirmAnswer2})\">${response.EMAIL_YES}</button> 
+    <button onclick=\"location.href(${confirmAnswer3})\">${response.EMAIL_NO}</button>`;
+    await transporter.sendMail(loginConfirmOptions, res);
+    logger.info(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN_CONFIRM_SEND_MAIL}`);
+  }
+
+  static async loginConfirmUser(req, res) {
+    const confirm = req.query.answer;
+    const userId = req.query.userId;
+    const id = req.query.id;
+    try {
+      await UserService.setConfirmValue(confirm, id);
+      logger.info(`[${accessUrl.LOGINCONFIRM}] ${id} ${userId} ${confirm} ${response.SETTING_ACCESSLOGS_CONFIRM}`);
+    } catch (err) {
+      logger.error(`[${accessUrl.LOGINCONFIRM}] ${id} ${userId} ${confirm} ${err}`);
+    }
   }
 
   static async myInfoUser(req, res) {

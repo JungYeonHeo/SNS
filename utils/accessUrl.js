@@ -7,8 +7,9 @@ module.exports = {
   DELETEDLIST: "GET /post/deletedList",
   RESTORE: "PATCH /post/restore",
   LIST: "GET /post/list",
-  JOIN: "POST /post/join",
-  LOGIN: "POST /post/login",
-  MYINFO: "GET /post/myInfo",
-  LIKELIST: "GET /post/likeList",
+  JOIN: "POST /user/join",
+  LOGIN: "POST /user/login",
+  LOGINCONFIRM: "GET /user/loginConfirm",
+  MYINFO: "GET /user/myInfo",
+  LIKELIST: "GET /user/likeList",
 };
