@@ -77,7 +77,7 @@ class UserController {
           UserController.sendEmailAfterSetup(userId, accessInfo.id, now, ip, os, device, browser, country, city, res);
         }
       } else {
-        const createdAccessInfo = await UserService.setAccessInfo(userId, ip, browser, device, country, city, 1);
+        const createdAccessInfo = await UserService.setAccessInfo(userId, ip, os, device, browser, country, city, 1);
         UserController.sendEmailAfterSetup(userId, createdAccessInfo.id, now, ip, os, device, browser, country, city, res);
       }
       const accessToken = generateAccessToken(userId);
