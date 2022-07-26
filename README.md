@@ -39,7 +39,7 @@
   - [X] 제목으로 검색 - 검색어 (띄어쓰기, 대소문자 구별 없이 검색되도록 구현)
   - [X] 작성일, 조회수, 좋아요 수로 정렬 (default: 작성일)
   - [X] 오름차순/내림차순으로 정렬할 것인지 선택 (default: desc)
-  - [X] Filtering - 해당 해시테그를 가진 게시글만 보도록 
+  - [X] Filtering - 해당 해시태그를 가진 게시글만 보도록 
   - [X] Pagination - 페이지 당 몇 개의 게시글을 볼 것인지 선택 (default: 10개)
 
 #### **📌 운영**
@@ -72,7 +72,13 @@
 <br/>
 
 ## 데이터베이스 모델링(ERD)
-
+![erd](https://user-images.githubusercontent.com/94504613/180904430-5d4f3cb1-642c-44f0-aa1b-bd431ce293b4.png)
+- users: 유저 정보 저장 테이블
+- posts: 게시글 저장 테이블
+- hashtags: 해시태그 저장 테이블
+- postLogs: 게시글 본 기록 저장 테이블
+- postLikes: 게시글 좋아요 기록 저장 테이블
+- accessLogs: 유저 웹 접근 기록 저장 테이블
 <br/>
 
 ## REST API
