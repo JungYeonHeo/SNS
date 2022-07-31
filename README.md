@@ -6,10 +6,12 @@
   <img src="https://img.shields.io/badge/Express-000000?style=flat&logo=Express&logoColor=white"/>
   <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=flat&logo=Sequelize&logoColor=white"/>
   <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white"/>
   <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white"/>
   <img src ="https://img.shields.io/badge/Nginx-009639?style=flat&logo=Nginx&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat&logo=Amazon EC2&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat&logo=Amazon RDS&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Amazon ElastiCache-1c5a9a?style=flat&logo=redis&logoColor=white"/>
 </p>
 </div> 
 <br/>
@@ -31,6 +33,7 @@
   - [X] 이름 특수문자 입력 체크 - sql injection, xss 방어
 - [X] jwt를 이용한 로그인 구현
 - [X] 접속한 적 없는 ip, os, device, browser로 접속 시 확인 메일 보내 검증
+- [X] 회원가입시 입력한 이메일로 메일을 보내 실제 본인 이메일이 맞는지 인증
 - [X] 회원정보 조회
 - [X] 좋아요 누른 게시글 조회
 
@@ -65,7 +68,6 @@
 `2022.07.20 ~ 2022.07.22(필수 기능 구현 기간) + α`
 
 #### **📌 구현 예정**
-- [ ] 회원가입시 입력한 이메일로 메일을 보내 실제 본인 이메일이 맞는지 인증 
 - [ ] 비밀번호 찾기 - 가입한 메일로 임시 비밀번호 생성해 발송 
 - [ ] error가 나면 슬랙에 알림이 울리도록 구현
 - [ ] 게시글에 이미지, 동영상 올릴 수 있도록 구현
@@ -80,7 +82,6 @@
 - [ ] 이미지 AWS S3에 보관
 - [ ] RDS에 Slave를 두어 DB 안정성 높임
 - [ ] url에 도메인, SSL 연결
-- [ ] 로그 고도화 후 ELK를 통한 통합 모니터링 시스템 구축
 <br/>
 
 ## AWS 배포
@@ -92,27 +93,71 @@
 
 ## 데이터베이스 모델링(ERD)
 ![erd](https://user-images.githubusercontent.com/94504613/180904430-5d4f3cb1-642c-44f0-aa1b-bd431ce293b4.png)
-- users: 유저 정보 저장 테이블
-- posts: 게시글 저장 테이블
-- hashtags: 해시태그 저장 테이블
-- postLogs: 게시글 본 기록 저장 테이블
-- postLikes: 게시글 좋아요 기록 저장 테이블
-- accessLogs: 유저 웹 접근 기록 저장 테이블
+- `users` 유저 정보 저장 테이블
+- `posts` 게시글 저장 테이블
+- `hashtags` 해시태그 저장 테이블
+- `postLogs` 게시글 본 기록 저장 테이블
+- `postLikes` 게시글 좋아요 기록 저장 테이블
+- `accessLogs` 유저 웹 접근 기록 저장 테이블
 <br/>
 
 ## REST API
 
+#### **📌 이메일 본인 확인 메일 보내기**
+**`POST` /user/joinEmailConfirm**
+```
+request {
+  "userId": "hwjddussls@naver.com"
+}
+```
+```
+response {
+  "message": "이메인 본인 확인 메일을 보냈습니다. 확인해주세요."
+}
+```
+
+#### **📌 랜덤 인증번호로 이메일 인증**
+**`POST` /user/joinRandomNumberConfirm**
+```
+request {
+  "userId": "hwjddussls@naver.com",
+  "randomNum": 564534
+}
+```
+- 받은 인증번호가 redis에 저장된 인증번호와 동일한 경우
+```
+response {
+  "message": "인증번호가 확인되었습니다.",
+  "EmailConfirm": 1
+}
+```
+- 받은 인증번호가 redis에 저장된 인증번호와 다른 경우
+```
+response {
+  "message": "인증번호가 올바르지 않습니다.",
+  "EmailConfirm": 1
+}
+```
+- 시간초과(180초)로 redis에 인증번호가 없는 경우
+```
+response {
+  "message": "인증번호가 만료되었습니다.",
+  "EmailConfirm": 0
+}
+```
+
 #### **📌 회원가입**
 **`POST` /user/join**
-```json
+```
 request {
   "userId": "qwer1234@naver.com",
   "userPw": "Qwer1234!",
   "confirmPw": "Qwer1234!",
-  "userName": "골골"
+  "userName": "골골",
+  "emailConfirm": 1
 }
 ```
-```json
+```
 response {
   "message": "회원가입 되었습니다."
 }
@@ -120,13 +165,13 @@ response {
 
 #### **📌 로그인**
 **`POST` /user/login**
-```json
+```
 request {
   "userId": "qwer1234@naver.com",
   "userPw": "Qwer1234!"
 }
 ```
-```json
+```
 response {
   "message": "로그인 되었습니다."
 }
@@ -134,7 +179,7 @@ response {
 
 #### **📌 내 정보 조회**
 **`GET` /user/myInfo**
-```json
+```
 response {
   "message": "사용자 정보를 조회했습니다.",
   "userId": "qwer1234@naver.com",
@@ -144,7 +189,7 @@ response {
 
 #### **📌 좋아요 누른 게시글 목록**
 **`GET` /user/likeList**
-```json
+```
 response {
   "message": "좋아요 누른 게시글을 조회했습니다.",
   "myLikeList": [
@@ -164,14 +209,14 @@ response {
 
 #### **📌 게시글 생성**
 **`POST` /post/create**
-```json
+```
 request {
   "title":  "속초여행", 
   "content": "너무 즐거웠던 주말 속초 여행",
   "hashtags":  "#맛집,#속초,#카페,#주말"
 }
 ```
-```json
+```
 response {
   "message": "포스팅 되었습니다."
 }
@@ -179,15 +224,15 @@ response {
 
 #### **📌 게시글 수정**
 **`PATCH` /post/create**  
-✔︎ 작성자만 수정가능
-```json
+  ✔︎ 작성자만 수정가능
+```
 request {
   "title":  "강릉여행", 
   "content": "너무 즐거웠던 주말 강릉 여행",
   "hashtags":  "#맛집,#강릉,#여행,#주말"
 }
 ```
-```json
+```
 response {
   "message": "포스팅 되었습니다."
 }
@@ -195,8 +240,8 @@ response {
 
 #### **📌 게시글 삭제**
 **`PATCH` /post/delete/:id**  
-✔︎ 작성자만 삭제가능
-```json
+  ✔︎ 작성자만 삭제가능
+```
 response {
   "message": "게시글이 삭제되었습니다. 삭제된 게시글은 복원할 수 있습니다."
 }
@@ -205,7 +250,7 @@ response {
 #### **📌 게시글 삭제된 목록 보기**
 **`GET` /post/deletedList**
 - 삭제된 게시물이 있을 경우
-```json
+```
 response {
   "message": "삭제된 게시물을 조회했습니다.",
   "deletedListInfo": [
@@ -223,7 +268,7 @@ response {
 }
 ```
 - 삭제된 게시물이 없을 경우
-```json
+```
 response {
   "message": "삭제된 게시물이 없습니다."
 }
@@ -231,7 +276,7 @@ response {
 
 #### **📌 게시글 복원**
 **`PATCH` /post/restore/:id**
-```json
+```
 response {
   "message": "게시글이 복원되었습니다."
 }
@@ -239,8 +284,8 @@ response {
 
 #### **📌 게시글 상세보기**
 **`GET` /post/detail/:id**  
-✔︎ 게시글 조회시 사용자당 조회수 1회만 증가
-```json
+  ✔︎ 게시글 조회시 사용자 당 조회수 1회만 증가
+```
 response {
   "message": "상세정보가 조회되었습니다.",
   "detailInfo": {
@@ -260,13 +305,13 @@ response {
 #### **📌 게시글 좋아요**
 **`PATCH` /post/like/:id**
 - 해당 게시글에 좋아요를 누른 적이 없는 경우
-```json
+```
 response {
   "message": "해당 게시글에 좋아요를 표시했습니다."
 }
 ```
 - 이미 좋아요를 누른 게시글인 경우
-```json
+```
 response {
   "message": "해당 게시글에 좋아요를 취소했습니다."
 }
@@ -275,7 +320,7 @@ response {
 #### **📌 게시글 목록 및 검색**
 **`GET` /post/list?search=여행&sort=views&orderBy=desc&hashtags=맛집,카페&perPage=5&page=1**
 - 검색결과가 있을 때
-```json
+```
 response {
   "message": "게시글 목록을 조회했습니다.",
   "filter": {
@@ -325,7 +370,7 @@ response {
 }
 ```
 - 검색 결과가 없을 때
-```json
+```
 response {
   "message": "게시글이 없습니다.",
   "filter": {

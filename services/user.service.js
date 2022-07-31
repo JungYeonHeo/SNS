@@ -1,7 +1,37 @@
 const models = require("../models");
+const redis = require("redis");
+const redisPool = require("../config/redisConfig");
 const { Op } = require("sequelize");
+const dotenv = require("dotenv");
+dotenv.config();
 
 class UserService {
+
+  static async setRandomAuthNumber(userId, randomNum) {
+    const client = redis.createClient(redisPool);
+    try {
+      await client.connect();
+      await client.set(userId, randomNum);
+      await client.expire(userId, process.env.AUTH_NUM_VAILD_TIME);  
+      return true;
+    } catch {
+      throw err;
+    } finally {
+      await client.disconnect();
+    }
+  }
+
+  static async getRandomAuthNumber(userId) {
+    const client = redis.createClient(redisPool);
+    try {
+      await client.connect();
+      return await client.get(userId);
+    } catch {
+      throw err;
+    } finally {
+      await client.disconnect();
+    }
+  }
 
   static async isJoined(userId) {
     try {

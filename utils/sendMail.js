@@ -22,7 +22,7 @@ const emailConfirmOptions = {
   subject: response.EMAIL_CONFIRM_FROM_SNS,
   html:
     `<h2>${response.EMAIL_SECRET_KEY}</h2>
-    <h4 style='background: #ccc; padding: 20px'>createRandomNumber(6)</h4>`,
+    <h4 style='background: #ccc; padding: 20px'>${createRandomNumber(6)}</h4>`,
 };
 
 const loginConfirmOptions = {
