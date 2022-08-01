@@ -10,6 +10,7 @@
   <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white"/>
   <img src ="https://img.shields.io/badge/Nginx-009639?style=flat&logo=Nginx&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat&logo=Amazon EC2&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Amazon S3-da5041?style=flat&logo=Amazon S3&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat&logo=Amazon RDS&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon ElastiCache-1c5a9a?style=flat&logo=redis&logoColor=white"/>
 </p>
@@ -71,7 +72,6 @@
 - [X] 3대의 EC2 앞에 nginx를 두어 로드밸런싱을 통한 부하 분산 처리 
 
 #### **📌 구현 예정** 
-- [ ] error가 나면 슬랙에 알림이 울리도록 구현
 - [ ] 게시글에 댓글 달 수 있도록 구현
 - [ ] 유저 검색 (수정, 팔로워&팔로링 수 추가)
 - [ ] 팔로잉 기능 구현
@@ -81,6 +81,7 @@
 - [ ] DM 기능 구현 (1:1 채팅)
 - [ ] 사용자 맞춤 추천 게시글
 - [ ] 실시간 인기글 보여주기 
+- [ ] error가 나면 슬랙에 알림이 울리도록 구현
 - [ ] 테스트 케이스 작성 
 - [ ] 이미지, 영상 AWS S3에 보관
 - [ ] RDS에 Slave 2대를 두어 DB 안정성 높임
@@ -224,7 +225,7 @@ response {
 ```
 
 #### **📌 내 정보 수정**
-**`GET` /user/update**
+**`PATCH` /user/update**
 ```
 request {
   "userPw": "Qwer1234!",
