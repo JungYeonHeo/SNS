@@ -108,6 +108,14 @@ class UserService {
     }
   }
 
+  static async setUserInfo(userId, userPw, userName) {
+    try { 
+      return await models.users.update({userPw: userPw, userName: userName}, {where: {userId: userId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async getLikeList(userId) {
     try { 
       const query = `select postId from postLikes where userId = '${userId}'`;

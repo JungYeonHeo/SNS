@@ -37,6 +37,8 @@ module.exports = {
   FINDPW_FAIL: "비밀번호 찾기에 실패하였습니다.",
   USER_INFO: "사용자 정보를 조회했습니다.",
   USER_INFO_FAIL: "사용자 정보 조회에 실패했습니다.",
+  UPDATE_USER_INFO: "사용자 정보를 수정했습니다.",
+  UPDATE_USER_INFO_FAIL: "사용자 정보를 수정에 실패하였습니다.",
   LIKE_LIST: "좋아요 누른 게시글을 조회했습니다.",
   LIKE_LIST_FAIL: "좋아요 누른 게시글을 조회에 실패했습니다.",
   LIKE_LIST_NONE: "좋아요 누른 게시글이 없습니다.",

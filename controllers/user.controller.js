@@ -25,6 +25,7 @@ class UserController {
       const isSaved = await UserService.setRandomAuthNumber(userId, randomNum);
       if (isSaved) {
         UserController.sendIdentificationMail(userId, randomNum, res);
+        logger.info(`[${accessUrl.JOIN_EMAIL_CONFIRM}] ${userId} ${response.SEND_EMAIL_CONFIRM}`);
         return res.status(200).json({message: response.SEND_EMAIL_CONFIRM});
       }
     } catch(err) {
@@ -138,6 +139,7 @@ class UserController {
       }
       const accessToken = generateAccessToken(userId);
       console.log("Bearer " + accessToken);
+      logger.info(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN}`);
       return res.status(200).json({message: response.LOGIN, token: "Bearer " + accessToken});
     } catch (err) {
       logger.error(`[${accessUrl.LOGIN}] ${userId} ${err}`);
@@ -187,9 +189,11 @@ class UserController {
         const isSaved = await UserService.setTempPassword(userId, tempPW);
         if (isSaved) {
           UserController.sendFindPasswordMail(userId, tempPW, res);
+          logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.SEND_FIND_PW_MAIL}`);
           return res.status(200).json({message: response.SEND_FIND_PW_MAIL});
         }
       } 
+      logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.NOT_USER}`);
       return res.status(200).json({message: response.NOT_USER});
     } catch(err) {
       logger.error(`[${accessUrl.FINDPW}] ${userId} ${err}`);
@@ -212,6 +216,7 @@ class UserController {
     const userId = req.user.id;
     try {
       const userInfo = await UserService.getUserInfo(userId);
+      logger.info(`[${accessUrl.MYINFO}] ${userId} ${response.USER_INFO}`);
       res.status(200).json({
         message: response.USER_INFO,
         userId: userInfo.userId,
@@ -223,14 +228,34 @@ class UserController {
     }
   }
 
+  static async updateUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
+    logger.info(accessUrl.UPDATE_USER);
+    const { userPw, userName } = req.body;
+    const userId = req.user.id;
+    try {
+      await UserService.setUserInfo(userId, userPw, userName);
+      logger.info(`[${accessUrl.UPDATE_USER}] ${userId} ${response.UPDATE_USER_INFO}`);
+      res.status(200).json({message: response.UPDATE_USER_INFO}); 
+    } catch (err) {
+      logger.error(`[${accessUrl.UPDATE_USER}] ${userId} ${err}`);
+      res.status(500).json({message: response.UPDATE_USER_INFO_FAIL});
+    }
+  }
+
   static async myLikeListUser(req, res) {
     logger.info(accessUrl.LIKELIST);
     const userId = req.user.id;
     try {
       const myLikeList = await UserService.getLikeList(userId);
       if (myLikeList.length == 0) {
+        logger.info(`[${accessUrl.LIKELIST}] ${userId} ${response.LIKE_LIST_NONE}`);
         return res.status(200).json({message: response.LIKE_LIST_NONE}); 
       }
+      logger.info(`[${accessUrl.LIKELIST}] ${userId} ${response.LIKE_LIST}`);
       res.status(200).json({
         message: response.LIKE_LIST,
         myLikeList: myLikeList

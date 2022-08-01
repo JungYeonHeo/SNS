@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/user.controller");
-const { checkEmail, checkJoinNum, checkJoin, checkLogin } = require("../utils/userValidator");
+const { checkEmail, checkJoinNum, checkJoin, checkLogin, checkUpdateMyInfo } = require("../utils/userValidator");
 const isUser = require("../utils/validateJwt");
 
 router.post("/joinEmailConfirm", checkEmail, UserController.joinEmailConfirmUser);
@@ -11,6 +11,7 @@ router.post("/login", checkLogin, UserController.loginUser);
 router.get("/loginConfirm", UserController.loginConfirmUser);
 router.post("/findPw", checkEmail, UserController.findPwUser);
 router.get("/myInfo", isUser, UserController.myInfoUser);
+router.patch("/update", [isUser, checkUpdateMyInfo], UserController.updateUser);
 router.get("/likeList", isUser, UserController.myLikeListUser);
 
 module.exports = router;
