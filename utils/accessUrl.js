@@ -12,6 +12,7 @@ module.exports = {
   JOIN: "POST /user/join",
   LOGIN: "POST /user/login",
   LOGIN_CONFIRM: "GET /user/loginConfirm",
+  FINDPW: "POST /user/findPw",
   MYINFO: "GET /user/myInfo",
   LIKELIST: "GET /user/likeList",
 };

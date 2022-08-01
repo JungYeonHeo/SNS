@@ -3,7 +3,7 @@ const response = require("./response");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const checkJoinEmail = [
+const checkEmail = [
   body("userId")
     .trim()
     .notEmpty()
@@ -46,7 +46,7 @@ const checkJoin = [
     .notEmpty()
     .withMessage(response.PW_EMPTY)
     .bail()
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}/g)
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[.!@#&$^])[0-9a-zA-Z]{8,}/g)
     .withMessage(response.PW_WARNING),
   body("confirmPw")
     .trim()
@@ -89,8 +89,8 @@ const checkLogin = [
     .notEmpty()
     .withMessage(response.PW_EMPTY)
     .bail()
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}/g)
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[.!@#&$^])[0-9a-zA-Z]{8,}/g)
     .withMessage(response.PW_WARNING), 
 ];
 
-module.exports = { checkJoinEmail, checkJoinNum, checkJoin, checkLogin };
+module.exports = { checkEmail, checkJoinNum, checkJoin, checkLogin };

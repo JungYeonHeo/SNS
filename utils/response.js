@@ -32,6 +32,9 @@ module.exports = {
   LOGIN: "로그인 되었습니다.",
   LOGIN_NO_MATCH: "아이디나 비밀번호가 일치하지 않습니다.", 
   LOGIN_FAIL: "로그인에 실패하였습니다.",
+  SEND_FIND_PW_MAIL: "해당 메일로 임시 비밀번호를 발급했습니다. 해당 비밀번호는 3분간 유효하며 해당 비밀번호로 로그인하고 꼭 비밀번호를 수정하시기 바랍니다.",
+  NOT_USER: "해당 이메일로 가입된 적이 없습니다.",
+  FINDPW_FAIL: "비밀번호 찾기에 실패하였습니다.",
   USER_INFO: "사용자 정보를 조회했습니다.",
   USER_INFO_FAIL: "사용자 정보 조회에 실패했습니다.",
   LIKE_LIST: "좋아요 누른 게시글을 조회했습니다.",
@@ -47,6 +50,7 @@ module.exports = {
   JOIN_EMAIL_RANDOM_NUM_NOT_VALID: "인증번호가 만료되었습니다.",
   LOGIN_CONFIRM_SEND_MAIL: "에게 로그인 확인 메일을 보냈습니다.",
   SETTING_ACCESSLOGS_CONFIRM: "사용자가 로그인 확인 메일에 반응을 보냈습니다.",
+  FIND_PW_SEND_MAIL: "에게 임시 비밀번호 발급 메일을 보냈습니다.",
 
   // validator
   RANDOM_NUM_EMPTY: "인증번호를 입력해주세요.",
@@ -82,6 +86,6 @@ module.exports = {
   EMAIL_IS_IT_YOU: "본인이 맞습니까?",
   EMAIL_YES: "예",
   EMAIL_NO: "아니오",
-  EMAIL_TEMP_PW: "임시 비밀번호를 알려드립니다.",
-  EMAIL_TEMP_PW_WARNING: "임시 비밀번호로 로그인 하신 후, 반드시 비밀번호를 수정해 주세요.",
+  EMAIL_TEMP_PW: "새로운 임시 비밀번호를 알려드립니다.",
+  EMAIL_TEMP_PW_WARNING: "임시 비밀번호는 3분간 유효하며, 임시 비밀번호로 로그인 하신 후 반드시 비밀번호를 수정해 주세요.",
 };
