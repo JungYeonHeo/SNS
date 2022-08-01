@@ -1,5 +1,7 @@
 const { body } = require("express-validator");
 const response = require("./response");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const checkJoinEmail = [
   body("userId")
@@ -27,7 +29,7 @@ const checkJoinNum = [
     .isNumeric()
     .withMessage(response.RANDOM_NUM_INTEGER_WARNING)
     .bail()
-    .isLength(6)
+    .isLength(process.env.RANDOM_NUM_LENGTH)
     .withMessage(response.RANDOM_NUM_LENGTH_WARNING)
 ];
 

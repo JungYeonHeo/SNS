@@ -21,7 +21,7 @@ class UserController {
     logger.info(accessUrl.JOIN_EMAIL_CONFIRM);
     const { userId } = req.body;
     try {
-      const randomNum = createRandomNumber(6);
+      const randomNum = createRandomNumber(process.env.RANDOM_NUM_LENGTH);
       const isSaved = await UserService.setRandomAuthNumber(userId, randomNum);
       if (isSaved) {
         UserController.sendIdentificationMail(userId, randomNum, res);
