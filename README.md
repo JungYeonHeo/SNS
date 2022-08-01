@@ -32,8 +32,8 @@
   - [X] 비밀번호 3가지조합 8자리이상
   - [X] 이름 특수문자 입력 체크 - sql injection, xss 방어
 - [X] jwt를 이용한 로그인 구현
-- [X] 접속한 적 없는 ip, os, device, browser로 접속 시 확인 메일 보내 검증
 - [X] 회원가입시 입력한 이메일로 메일을 보내 실제 본인 이메일이 맞는지 인증
+- [X] 접속한 적 없는 ip, os, device, browser로 접속 시 확인 메일 보내 검증
 - [X] 회원정보 조회
 - [X] 좋아요 누른 게시글 조회
 
@@ -118,10 +118,12 @@ response {
 
 #### **📌 랜덤 인증번호로 이메일 인증**
 **`POST` /user/joinRandomNumberConfirm**
+ ✔︎ 아이디 이메일 형식 확인
+ ✔︎ 인증번호 6자리 숫자 확인
 ```
 request {
   "userId": "hwjddussls@naver.com",
-  "randomNum": 564534
+  "randomNum": "564534"
 }
 ```
 - 받은 인증번호가 redis에 저장된 인증번호와 동일한 경우
@@ -135,7 +137,7 @@ response {
 ```
 response {
   "message": "인증번호가 올바르지 않습니다.",
-  "EmailConfirm": 1
+  "EmailConfirm": 0
 }
 ```
 - 시간초과(180초)로 redis에 인증번호가 없는 경우
@@ -148,6 +150,9 @@ response {
 
 #### **📌 회원가입**
 **`POST` /user/join**
+  ✔︎ 아이디 이메일 형식 확인
+  ✔︎ 비밀번호 3가지 조합 8자 이상 확인
+  ✔︎ 이름 특수문자 제한 확인
 ```
 request {
   "userId": "qwer1234@naver.com",
