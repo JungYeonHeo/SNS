@@ -50,7 +50,8 @@ module.exports = {
 
   // validator
   RANDOM_NUM_EMPTY: "인증번호를 입력해주세요.",
-  RANDOM_NUM_WARNING: "인증번호는 숫자입니다.",
+  RANDOM_NUM_INTEGER_WARNING: "인증번호는 숫자입니다.",
+  RANDOM_NUM_LENGTH_WARNING: "인증번호는 6자입니다.",
   EMAIL_EMPTY: "이메일을 입력해주세요.",
   EMAIL_WARNING: "이메일 형식에 맞게 작성해주세요.", 
   PW_EMPTY: "비밀번호를 입력해주세요.",

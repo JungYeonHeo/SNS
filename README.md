@@ -117,9 +117,9 @@ response {
 ```
 
 #### **📌 랜덤 인증번호로 이메일 인증**
-**`POST` /user/joinRandomNumberConfirm**
- ✔︎ 아이디 이메일 형식 확인
- ✔︎ 인증번호 6자리 숫자 확인
+**`POST` /user/joinRandomNumberConfirm**   
+ ✔︎ 아이디 이메일 형식 확인  
+ ✔︎ 인증번호 6자리 숫자 확인  
 ```
 request {
   "userId": "hwjddussls@naver.com",
@@ -149,10 +149,10 @@ response {
 ```
 
 #### **📌 회원가입**
-**`POST` /user/join**
-  ✔︎ 아이디 이메일 형식 확인
-  ✔︎ 비밀번호 3가지 조합 8자 이상 확인
-  ✔︎ 이름 특수문자 제한 확인
+**`POST` /user/join**  
+  ✔︎ 아이디 이메일 형식 확인  
+  ✔︎ 비밀번호 3가지 조합 8자 이상 확인  
+  ✔︎ 이름 특수문자 제한 확인  
 ```
 request {
   "userId": "qwer1234@naver.com",
