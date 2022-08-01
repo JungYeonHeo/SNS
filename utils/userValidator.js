@@ -1,6 +1,33 @@
 const { body } = require("express-validator");
 const response = require("./response");
 
+const checkJoinEmail = [
+  body("userId")
+    .trim()
+    .notEmpty()
+    .withMessage(response.EMAIL_EMPTY)
+    .bail()
+    .isEmail()
+    .withMessage(response.EMAIL_WARNING), 
+];
+
+const checkJoinNum = [
+  body("userId")
+    .trim()
+    .notEmpty()
+    .withMessage(response.EMAIL_EMPTY)
+    .bail()
+    .isEmail()
+    .withMessage(response.EMAIL_WARNING), 
+  body("randomNum")
+    .trim()
+    .notEmpty()
+    .withMessage(response.RANDOM_NUM_EMPTY)
+    .bail()
+    .isNumeric()
+    .withMessage(response.RANDOM_NUM_WARNING), 
+];
+
 const checkJoin = [
   body("userId")
     .trim()
@@ -38,6 +65,10 @@ const checkJoin = [
     .not().matches(/\<|\>|\"|\'|\%|\;|\&|\+|\-/g)
     .not().matches(/[&\\+\-%@=\/\\\:;,\.\'\"\^`~\_|\!\/\?\*$<>()\[\]\{\}]/i)
     .withMessage(response.USERNAME_INCLUDE_SCRIPT),
+  body("emailConfirm")
+    .trim()
+    .equals(1)
+    .withMessage(response.JOIN_EMAIL_CONFIRM)  
 ];
 
 const checkLogin = [
@@ -57,4 +88,4 @@ const checkLogin = [
     .withMessage(response.PW_WARNING), 
 ];
 
-module.exports = { checkJoin, checkLogin };
+module.exports = { checkJoinEmail, checkJoinNum, checkJoin, checkLogin };

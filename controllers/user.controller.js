@@ -6,12 +6,67 @@ const getRequestAccessInfo = require("../utils/getRequestAccessInfo");
 const response = require("../utils/response");
 const accessUrl = require("../utils/accessUrl");
 const logger = require("../utils/winston");
-const { transporter, loginConfirmOptions } = require("../utils/sendMail");
+const { transporter, emailConfirmOptions, loginConfirmOptions } = require("../utils/sendMail");
+const { createRandomNumber, createRandomPassword } = require("../utils/createAuthInfo");
 const dotenv = require("dotenv");
 dotenv.config();
 require("date-utils");
 
 class UserController {
+  static async joinEmailConfirmUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
+    logger.info(accessUrl.JOIN_EMAIL_CONFIRM);
+    const { userId } = req.body;
+    try {
+      const randomNum = createRandomNumber(6);
+      const isSaved = await UserService.setRandomAuthNumber(userId, randomNum);
+      if (isSaved) {
+        UserController.sendIdentificationMail(userId, randomNum, res);
+        return res.status(200).json({message: response.SEND_EMAIL_CONFIRM});
+      }
+    } catch(err) {
+      logger.error(`[${accessUrl.JOIN_EMAIL_CONFIRM}] ${userId} ${err}`);
+      res.status(500).json({message: response.JOIN_EMAIL_CONFIRM_FAIL});
+    }
+  }
+
+  static async sendIdentificationMail(userId, randomNum, res) {
+    // 이메일 본인 확인 메일 보내기
+    emailConfirmOptions.to = userId;
+    emailConfirmOptions.html = `<h2>${response.EMAIL_SECRET_KEY}</h2>
+    <h4 style='background: #ccc; padding: 20px'>${randomNum}</h4>`;
+    transporter.sendMail(emailConfirmOptions, res);
+    logger.info(`[${accessUrl.JOIN_EMAIL_CONFIRM}] ${userId} ${response.JOIN_EMAIL_CONFIRM_SEND_MAIL}`);
+  }
+
+  static async joinRandomNumberConfirmUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
+    logger.info(accessUrl.JOIN_RANDOM_NUM_CONFIRM);
+    const { userId, randomNum } = req.body;
+    try {
+      const storedRandomNumber = await UserService.getRandomAuthNumber(userId);
+      if (storedRandomNumber) {
+        if (storedRandomNumber == randomNum) {
+          logger.info(`[${accessUrl.JOIN_RANDOM_NUM_CONFIRM}] ${userId} ${response.JOIN_EMAIL_RANDOM_NUM_OK}`);
+          return res.status(200).json({message: response.JOIN_EMAIL_RANDOM_NUM_OK, emailConfirm: 1});
+        }
+        logger.info(`[${accessUrl.JOIN_RANDOM_NUM_CONFIRM}] ${userId} ${response.JOIN_EMAIL_RANDOM_NUM_NO}`);
+        return res.status(200).json({message: response.JOIN_EMAIL_RANDOM_NUM_NO, emailConfirm: 0});
+      }
+      logger.info(`[${accessUrl.JOIN_RANDOM_NUM_CONFIRM}] ${userId} ${response.JOIN_EMAIL_RANDOM_NUM_NOT_VALID}`);
+      return res.status(200).json({message: response.JOIN_EMAIL_RANDOM_NUM_NOT_VALID, emailConfirm: 0});
+    } catch(err) {
+      logger.error(`[${accessUrl.JOIN_RANDOM_NUM_CONFIRM}] ${userId} ${err}`);
+      res.status(500).json({message: response.JOIN_RANDOM_NUM_CONFIRM_FAIL});
+    }
+  }
+
   static async joinUser(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -74,23 +129,23 @@ class UserController {
           await UserService.setConfirmValue(2, accessInfo.id);
         }
         if (accessInfo.confirm == 1) { 
-          UserController.sendEmailAfterSetup(userId, accessInfo.id, now, ip, os, device, browser, country, city, res);
+          UserController.sendLoginConfirmMail(userId, accessInfo.id, now, ip, os, device, browser, country, city, res);
         }
       } else {
         const createdAccessInfo = await UserService.setAccessInfo(userId, ip, os, device, browser, country, city, 1);
-        UserController.sendEmailAfterSetup(userId, createdAccessInfo.id, now, ip, os, device, browser, country, city, res);
+        UserController.sendLoginConfirmMail(userId, createdAccessInfo.id, now, ip, os, device, browser, country, city, res);
       }
       const accessToken = generateAccessToken(userId);
       console.log("Bearer " + accessToken);
-      res.setHeader("authorization", "Bearer " + accessToken);
-      return res.status(200).json({message: response.LOGIN});
+      return res.status(200).json({message: response.LOGIN, token: "Bearer " + accessToken});
     } catch (err) {
       logger.error(`[${accessUrl.LOGIN}] ${userId} ${err}`);
       res.status(500).json({message: response.LOGIN_FAIL});
     } 
   }
 
-  static async sendEmailAfterSetup(userId, id, now, ip, os, device, browser, country, city, res) {
+  static async sendLoginConfirmMail(userId, id, now, ip, os, device, browser, country, city, res) {
+    // 접속한 적 없는 정보로 로그인한 경우, 로그인 본인 확인 메일 보내기
     const confirmAnswer2 = process.env.BASE_URL + `/user/loginConfirm?answer=2&userId=${userId}&id=${id}`;
     const confirmAnswer3 = process.env.BASE_URL + `/user/loginConfirm?answer=3&userId=${userId}&id=${id}`;
     loginConfirmOptions.to = userId;
@@ -101,7 +156,7 @@ class UserController {
     <hr><p>${response.EMAIL_IS_IT_YOU}</p>
     <button onclick=\"location.href(${confirmAnswer2})\">${response.EMAIL_YES}</button> 
     <button onclick=\"location.href(${confirmAnswer3})\">${response.EMAIL_NO}</button>`;
-    await transporter.sendMail(loginConfirmOptions, res);
+    transporter.sendMail(loginConfirmOptions, res);
     logger.info(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN_CONFIRM_SEND_MAIL}`);
   }
 

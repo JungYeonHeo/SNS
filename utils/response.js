@@ -3,6 +3,8 @@ module.exports = {
   FORBIDDEN: { status: 403, message: "Forbidden", detail: "권한이 없는 사용자입니다." },
   NOT_FOUND: { status: 404, message: "Not Found", detail: "올바른 경로로 접속하세요." },
   INTERNAL_SERVER_ERROR: { status: 500, message: "Internal Server Error", detail: "서버 에러입니다. 관리자에게 문의하세요." },
+  
+  // res & log
   CREATE: "포스팅 되었습니다.",
   CREATE_FAIL: "포스팅에 실패하였습니다. 잠시 후 다시 시도해주세요.",
   UPDATE: "게시글이 수정되었습니다.",
@@ -25,6 +27,8 @@ module.exports = {
   JOIN_ID_DUPLICATE: "이미 사용중인 이메일입니다.",
   JOIN: "회원가입이 되었습니다.",
   JOIN_FAIL: "회원가입에 실패하였습니다.",
+  JOIN_EMAIL_CONFIRM_FAIL: "이메일 본인 확인 메일 보내는 것에 실패하였습니다.", 
+  JOIN_RANDOM_NUM_CONFIRM_FAIL: "이메일 본인 확인 인증번호 인증에 실패하였습니다.", 
   LOGIN: "로그인 되었습니다.",
   LOGIN_NO_MATCH: "아이디나 비밀번호가 일치하지 않습니다.", 
   LOGIN_FAIL: "로그인에 실패하였습니다.",
@@ -33,6 +37,20 @@ module.exports = {
   LIKE_LIST: "좋아요 누른 게시글을 조회했습니다.",
   LIKE_LIST_FAIL: "좋아요 누른 게시글을 조회에 실패했습니다.",
   LIKE_LIST_NONE: "좋아요 누른 게시글이 없습니다.",
+
+  ACCESS_DENIED: "접속이 제한되었습니다.",
+  NOT_BOT: "BOT 접근을 금지합니다.",
+  SEND_EMAIL_CONFIRM: "이메인 본인 확인 메일을 보냈습니다. 확인해주세요.",
+  JOIN_EMAIL_CONFIRM_SEND_MAIL: "에게 이메일 본인 확인 메일을 보냈습니다.",
+  JOIN_EMAIL_RANDOM_NUM_OK: "인증번호가 확인되었습니다.",
+  JOIN_EMAIL_RANDOM_NUM_NO: "인증번호가 올바르지 않습니다.",
+  JOIN_EMAIL_RANDOM_NUM_NOT_VALID: "인증번호가 만료되었습니다.",
+  LOGIN_CONFIRM_SEND_MAIL: "에게 로그인 확인 메일을 보냈습니다.",
+  SETTING_ACCESSLOGS_CONFIRM: "사용자가 로그인 확인 메일에 반응을 보냈습니다.",
+
+  // validator
+  RANDOM_NUM_EMPTY: "인증번호를 입력해주세요.",
+  RANDOM_NUM_WARNING: "인증번호는 숫자입니다.",
   EMAIL_EMPTY: "이메일을 입력해주세요.",
   EMAIL_WARNING: "이메일 형식에 맞게 작성해주세요.", 
   PW_EMPTY: "비밀번호를 입력해주세요.",
@@ -42,6 +60,7 @@ module.exports = {
   USERNAME_EMPTY: "이름을 입력해주세요.",
   USERNAME_LENGTH: "2글자이상 10글자미만으로 작성해주세요.",
   USERNAME_INCLUDE_SCRIPT: "이름에 특수문자를 포함할 수 없습니다.",
+  JOIN_EMAIL_CONFIRM: "이메일 인증을 해주세요.",
   LOGIN_REQUIRED: "로그인을 해주세요.",
   TITLE_EMPTY: "제목을 입력해주세요.",
   TITLE_LENGTH: "2글자이상 30글자 미만으로 입력해주세요.",
@@ -50,10 +69,8 @@ module.exports = {
   TITLE_INCLUDE_SCRIPT: "제목에 특정 특수문자를 포함할 수 없습니다.",
   CONTENT_INCLUDE_SCRIPT: "내용에 특정 특수문자를 포함할 수 없습니다.",
   HASHTAG_INCLUDE_SCRIPT: "해시태그에 특정 특수문자를 포함할 수 없습니다.",
-  ACCESS_DENIED: "접속이 제한되었습니다.",
-  NOT_BOT: "BOT 접근을 금지합니다.",
-  LOGIN_CONFIRM_SEND_MAIL: "에게 로그인 확인 메일을 보냈습니다.",
-  SETTING_ACCESSLOGS_CONFIRM: "사용자가 로그인 확인메일에 반응을 보냈습니다.",
+
+  // mail
   EMAIL_CONFIRM_FROM_SNS: "SNS에서 이메일 주소를 확인합니다.",
   EMAIL_SECRET_KEY: "인증키를 입력해주세요.",
   EMAIL_NEW_LOGIN: "새로운 환경에서 로그인 되었습니다.",
@@ -65,6 +82,5 @@ module.exports = {
   EMAIL_YES: "예",
   EMAIL_NO: "아니오",
   EMAIL_TEMP_PW: "임시 비밀번호를 알려드립니다.",
-  EMAIL_NO: "아니오",
   EMAIL_TEMP_PW_WARNING: "임시 비밀번호로 로그인 하신 후, 반드시 비밀번호를 수정해 주세요.",
 };
