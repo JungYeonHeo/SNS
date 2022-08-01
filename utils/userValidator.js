@@ -25,7 +25,10 @@ const checkJoinNum = [
     .withMessage(response.RANDOM_NUM_EMPTY)
     .bail()
     .isNumeric()
-    .withMessage(response.RANDOM_NUM_WARNING), 
+    .withMessage(response.RANDOM_NUM_INTEGER_WARNING)
+    .bail()
+    .isLength(6)
+    .withMessage(response.RANDOM_NUM_LENGTH_WARNING)
 ];
 
 const checkJoin = [
