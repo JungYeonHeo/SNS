@@ -74,9 +74,43 @@ class UserService {
     }
   }
 
+  static async setTempPassword(userId, tempPW) {
+    const client = redis.createClient(redisPool);
+    try {
+      await client.connect();
+      await client.set(userId, tempPW);
+      await client.expire(userId, process.env.TEMP_PW_VAILD_TIME);  
+      return true;
+    } catch {
+      throw err;
+    } finally {
+      await client.disconnect();
+    }
+  }
+
+  static async getTempPassword(userId) {
+    const client = redis.createClient(redisPool);
+    try {
+      await client.connect();
+      return await client.get(userId); 
+    } catch {
+      throw err;
+    } finally {
+      await client.disconnect();
+    }
+  }
+
   static async getUserInfo(userId) {
     try { 
       return await models.users.findOne({where: {userId: userId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setUserInfo(userId, userPw, userName) {
+    try { 
+      return await models.users.update({userPw: userPw, userName: userName}, {where: {userId: userId}});
     } catch (err) {
       throw err;
     }

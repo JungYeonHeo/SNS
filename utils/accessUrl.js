@@ -7,11 +7,14 @@ module.exports = {
   DELETEDLIST: "GET /post/deletedList",
   RESTORE: "PATCH /post/restore",
   LIST: "GET /post/list",
+
   JOIN_EMAIL_CONFIRM: "POST /user/joinEmailConfirm",
   JOIN_RANDOM_NUM_CONFIRM: "POST /user/joinRandomNumberConfirm",
   JOIN: "POST /user/join",
   LOGIN: "POST /user/login",
   LOGIN_CONFIRM: "GET /user/loginConfirm",
+  FINDPW: "POST /user/findPw",
   MYINFO: "GET /user/myInfo",
+  UPDATE_USER: "PATCH /user/update",
   LIKELIST: "GET /user/likeList",
 };

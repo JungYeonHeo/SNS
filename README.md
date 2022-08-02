@@ -10,6 +10,7 @@
   <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white"/>
   <img src ="https://img.shields.io/badge/Nginx-009639?style=flat&logo=Nginx&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat&logo=Amazon EC2&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Amazon S3-da5041?style=flat&logo=Amazon S3&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat&logo=Amazon RDS&logoColor=white"/>
   <img src="https://img.shields.io/badge/Amazon ElastiCache-1c5a9a?style=flat&logo=redis&logoColor=white"/>
 </p>
@@ -19,11 +20,14 @@
 
 ## 프로젝트
 
-#### **📌 필수구현 기능**
+#### **📌 필수 구현 기능**
 - [X] 유저 이메일로 로그인&회원가입, jwt 토큰 발급
-- [X] 게시글 CRUD  
+- [X] 게시글 CRUD (게시글 생성, 수정, 삭제&복원, 검색)
 
-이외에 기능은 개인적으로 추가 구현한 기능입니다.
+⇒ 위에 명시된 기능을 제외한 다른 기능은 개인적으로 추가 정의하여 구현한 기능이며, 혼자 진행한 프로젝트입니다.
+
+#### **📌 개발기간**
+`2022.07.20 ~ 2022.07.22(필수 구현 기능 기간) + α(추가 정의 구현 기간)`
 
 #### **📌 유저**
 - [X] express-validator를 통한 회원가입 입력값 검증
@@ -34,7 +38,9 @@
 - [X] jwt를 이용한 로그인 구현
 - [X] 회원가입시 입력한 이메일로 메일을 보내 실제 본인 이메일이 맞는지 인증
 - [X] 접속한 적 없는 ip, os, device, browser로 접속 시 확인 메일 보내 검증
+- [X] 비밀번호 찾기 - 가입한 메일로 임시 비밀번호 생성해 발송
 - [X] 회원정보 조회
+- [X] 회원정보 수정
 - [X] 좋아요 누른 게시글 조회
 
 #### **📌 게시글**
@@ -59,29 +65,25 @@
   - [X] Pagination - 페이지 당 몇 개의 게시글을 볼 것인지 선택 (default: 10개)
 
 #### **📌 운영**
+- [X] 서버가 운영 중 멈추는 일이 없도록 모든 기능에 대한 예외처리
+- [X] winston을 통한 info, error 로그 남기기 
 - [X] docker를 사용한 환경 구축
 - [X] AWS EC2 & RDS를 통한 웹 서비스 배포 
-- [X] 2대의 EC2 앞에 nginx를 두어 로드밸런싱을 통한 부하 분산 처리 
-- [X] winston을 통한 info, error 로그 남기기 
+- [X] 3대의 EC2 앞에 nginx를 두어 로드밸런싱을 통한 부하 분산 처리 
 
-#### **📌 개발기간**
-`2022.07.20 ~ 2022.07.22(필수 기능 구현 기간) + α`
-
-#### **📌 구현 예정**
-- [ ] 비밀번호 찾기 - 가입한 메일로 임시 비밀번호 생성해 발송 
-- [ ] error가 나면 슬랙에 알림이 울리도록 구현
-- [ ] 게시글에 이미지, 동영상 올릴 수 있도록 구현
+#### **📌 구현 예정** 
 - [ ] 게시글에 댓글 달 수 있도록 구현
-- [ ] 사용자 프로필 이미지 추가 기능
-- [ ] 아이디 검색을 통한 팔로우 기능
+- [ ] 유저 검색 기능 구현
+- [ ] 팔로잉하는 기능 구현
+- [ ] 내 정보 조회 수정 (팔로워&팔로잉 수 추가)
 - [ ] 팔로우, 팔로워 목록 확인
+- [ ] 사용자 프로필 이미지, 소개글 추가 기능
+- [ ] 게시글에 이미지, 동영상 올릴 수 있도록 구현
 - [ ] DM 기능 구현 (1:1 채팅)
-- [ ] 사용자 맞춤 추천 게시글
-- [ ] 실시간 인기글 보여주기 
-- [ ] 테스트 케이스 작성 
-- [ ] 이미지 AWS S3에 보관
-- [ ] RDS에 Slave를 두어 DB 안정성 높임
-- [ ] url에 도메인, SSL 연결
+- [ ] 팔로잉한 사람의 읽지 않은 새로운 게시글 목록 구현
+- [ ] error가 나면 슬랙에 알림이 울리도록 구현
+- [ ] 이미지, 영상 AWS S3에 보관
+- [ ] RDS에 Slave 2대를 두어 DB 안정성 높임
 <br/>
 
 ## AWS 배포
@@ -150,9 +152,10 @@ response {
 
 #### **📌 회원가입**
 **`POST` /user/join**  
-  ✔︎ 아이디 이메일 형식 확인  
-  ✔︎ 비밀번호 3가지 조합 8자 이상 확인  
-  ✔︎ 이름 특수문자 제한 확인  
+  ✔︎ `userId` 이메일 형식 확인  
+  ✔︎ `userPw` 3가지 조합 8자 이상 확인  
+  ✔︎ `userName` 특수문자 제한 확인  
+  ✔︎ `emailConfirm` 이메일 본인 인증을 했는지 여부 (0: 인증X, 1: 인증O)
 ```
 request {
   "userId": "qwer1234@naver.com",
@@ -178,7 +181,35 @@ request {
 ```
 ```
 response {
-  "message": "로그인 되었습니다."
+  "message": "로그인 되었습니다.",
+  "token": token
+}
+```
+
+#### **📌 로그인 확인 메일에 대한 사용자 응답 처리**
+사용자가 받은 메일에서 "본인이 맞습니까?"라는 물음에 `예` 또는 `아니오` 버튼을 누르면 서버로 오는 요청  
+**`GET` /user/loginConfirm?answer=2&userId=qwer1234@naver.com&id=1**  
+  ✔︎ 본인이 로그인한 것이 맞다고 응답한 경우  -> 해당 기록 인증 처리  
+**`GET` /user/loginConfirm?answer=3&userId=qwer1234@naver.com&id=1**  
+  ✔︎ 본인이 로그인한 것이 아니라고 응답한 경우 -> 접속 제한 처리
+
+#### **📌 비밀번호 찾기**
+**`GET` /user/findPw**
+```
+request {
+  "userId": "qwer1234@naver.com"
+}
+```
+- 없는 사용자인 경우
+```
+request {
+  "message": "해당 이메일로 가입된 적이 없습니다."
+}
+```
+- 있는 사용자인 경우
+```
+request {
+  "message":  "해당 메일로 임시 비밀번호를 발급했습니다. 해당 비밀번호는 3분간 유효하며 해당 비밀번호로 로그인하고 꼭 비밀번호를 수정하시기 바랍니다."
 }
 ```
 
@@ -189,6 +220,21 @@ response {
   "message": "사용자 정보를 조회했습니다.",
   "userId": "qwer1234@naver.com",
   "userName": "골골"
+}
+```
+
+#### **📌 내 정보 수정**
+**`PATCH` /user/update**
+```
+request {
+  "userPw": "Qwer1234!",
+  "confirmPw": "Qwer1234!",
+  "userName": "골골이"
+}
+```
+```
+response {
+  "message": "사용자 정보를 수정했습니다.",
 }
 ```
 
@@ -405,7 +451,7 @@ response {
 
 #### **📌 입력값 검증**
 
-#### **📌 사용자 인증 및 메일 보내기**
+#### **📌 메일 보내기**
 
 #### **📌 게시글 검색**
 

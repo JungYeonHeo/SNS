@@ -6,7 +6,7 @@ const getRequestAccessInfo = require("../utils/getRequestAccessInfo");
 const response = require("../utils/response");
 const accessUrl = require("../utils/accessUrl");
 const logger = require("../utils/winston");
-const { transporter, emailConfirmOptions, loginConfirmOptions } = require("../utils/sendMail");
+const { transporter, emailConfirmOptions, loginConfirmOptions, tempPWOptions } = require("../utils/sendMail");
 const { createRandomNumber, createRandomPassword } = require("../utils/createAuthInfo");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -21,10 +21,11 @@ class UserController {
     logger.info(accessUrl.JOIN_EMAIL_CONFIRM);
     const { userId } = req.body;
     try {
-      const randomNum = createRandomNumber(6);
+      const randomNum = createRandomNumber(process.env.RANDOM_NUM_LENGTH);
       const isSaved = await UserService.setRandomAuthNumber(userId, randomNum);
       if (isSaved) {
         UserController.sendIdentificationMail(userId, randomNum, res);
+        logger.info(`[${accessUrl.JOIN_EMAIL_CONFIRM}] ${userId} ${response.SEND_EMAIL_CONFIRM}`);
         return res.status(200).json({message: response.SEND_EMAIL_CONFIRM});
       }
     } catch(err) {
@@ -37,7 +38,7 @@ class UserController {
     // 이메일 본인 확인 메일 보내기
     emailConfirmOptions.to = userId;
     emailConfirmOptions.html = `<h2>${response.EMAIL_SECRET_KEY}</h2>
-    <h4 style='background: #ccc; padding: 20px'>${randomNum}</h4>`;
+    <h4 style='background: #eee; padding: 20px'>${randomNum}</h4>`;
     transporter.sendMail(emailConfirmOptions, res);
     logger.info(`[${accessUrl.JOIN_EMAIL_CONFIRM}] ${userId} ${response.JOIN_EMAIL_CONFIRM_SEND_MAIL}`);
   }
@@ -107,7 +108,8 @@ class UserController {
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const isMatch = await bcrypt.compare(userPw, userInfo.userPw);
-      if (!isMatch) {
+      const tempPw = await UserService.getRandomAuthNumber(userId);
+      if (!isMatch && userPw != tempPw) {
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const { ip, os, device, browser, country, city } = await getRequestAccessInfo(req, res);
@@ -137,6 +139,7 @@ class UserController {
       }
       const accessToken = generateAccessToken(userId);
       console.log("Bearer " + accessToken);
+      logger.info(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN}`);
       return res.status(200).json({message: response.LOGIN, token: "Bearer " + accessToken});
     } catch (err) {
       logger.error(`[${accessUrl.LOGIN}] ${userId} ${err}`);
@@ -172,11 +175,48 @@ class UserController {
     }
   }
 
+  static async findPwUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
+    logger.info(accessUrl.FINDPW);
+    const { userId } = req.body;
+    try {
+      const userInfo = await UserService.isJoined(userId);
+      if (userInfo) {
+        const tempPW = createRandomPassword(process.env.TEMP_PW_LENGTH);
+        const isSaved = await UserService.setTempPassword(userId, tempPW);
+        if (isSaved) {
+          UserController.sendFindPasswordMail(userId, tempPW, res);
+          logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.SEND_FIND_PW_MAIL}`);
+          return res.status(200).json({message: response.SEND_FIND_PW_MAIL});
+        }
+      } 
+      logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.NOT_USER}`);
+      return res.status(200).json({message: response.NOT_USER});
+    } catch(err) {
+      logger.error(`[${accessUrl.FINDPW}] ${userId} ${err}`);
+      res.status(500).json({message: response.FINDPW_FAIL});
+    }
+  }
+
+  static async sendFindPasswordMail(userId, tempPW, res) {
+    // 임시 비밀번호 발급 메일 보내기
+    tempPWOptions.to = userId;
+    tempPWOptions.html = `<h3>${response.EMAIL_TEMP_PW}</h3> 
+    <h2 style='background: #eee; padding: 20px'>${tempPW}</h2>
+    <h3 style='color: crimson;'>${response.EMAIL_TEMP_PW_WARNING}</h3>`;
+    transporter.sendMail(tempPWOptions, res);
+    logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.FIND_PW_SEND_MAIL}`);
+  }
+
   static async myInfoUser(req, res) {
     logger.info(accessUrl.MYINFO);
     const userId = req.user.id;
     try {
       const userInfo = await UserService.getUserInfo(userId);
+      logger.info(`[${accessUrl.MYINFO}] ${userId} ${response.USER_INFO}`);
       res.status(200).json({
         message: response.USER_INFO,
         userId: userInfo.userId,
@@ -188,14 +228,34 @@ class UserController {
     }
   }
 
+  static async updateUser(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.errors.map((obj) => obj.msg) });
+    }
+    logger.info(accessUrl.UPDATE_USER);
+    const { userPw, userName } = req.body;
+    const userId = req.user.id;
+    try {
+      await UserService.setUserInfo(userId, userPw, userName);
+      logger.info(`[${accessUrl.UPDATE_USER}] ${userId} ${response.UPDATE_USER_INFO}`);
+      res.status(200).json({message: response.UPDATE_USER_INFO}); 
+    } catch (err) {
+      logger.error(`[${accessUrl.UPDATE_USER}] ${userId} ${err}`);
+      res.status(500).json({message: response.UPDATE_USER_INFO_FAIL});
+    }
+  }
+
   static async myLikeListUser(req, res) {
     logger.info(accessUrl.LIKELIST);
     const userId = req.user.id;
     try {
       const myLikeList = await UserService.getLikeList(userId);
       if (myLikeList.length == 0) {
+        logger.info(`[${accessUrl.LIKELIST}] ${userId} ${response.LIKE_LIST_NONE}`);
         return res.status(200).json({message: response.LIKE_LIST_NONE}); 
       }
+      logger.info(`[${accessUrl.LIKELIST}] ${userId} ${response.LIKE_LIST}`);
       res.status(200).json({
         message: response.LIKE_LIST,
         myLikeList: myLikeList
