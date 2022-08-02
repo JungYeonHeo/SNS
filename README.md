@@ -1,6 +1,6 @@
 <div align="center">
 
-  # SNS(Social Betwork Service) 백엔드 구현
+  # SNS(Social Network Service) 백엔드 구현
 <p>
   <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=Node.js&logoColor=white"/>
   <img src="https://img.shields.io/badge/Express-000000?style=flat&logo=Express&logoColor=white"/>
@@ -20,14 +20,14 @@
 
 ## 프로젝트
 
-#### **📌 필수 구현 기능**
+#### **📌 필수 기능**
 - [X] 유저 이메일로 로그인&회원가입, jwt 토큰 발급
 - [X] 게시글 CRUD (게시글 생성, 수정, 삭제&복원, 검색)
 
 ⇒ 위에 명시된 기능을 제외한 다른 기능은 개인적으로 추가 정의하여 구현한 기능이며, 혼자 진행한 프로젝트입니다.
 
 #### **📌 개발기간**
-`2022.07.20 ~ 2022.07.22(필수 구현 기능 기간) + α(추가 정의 구현 기간)`
+`2022.07.20 ~ 2022.07.22(필수 기능 구현 기간) + α(추가 정의 구현 기간)`
 
 #### **📌 유저**
 - [X] express-validator를 통한 회원가입 입력값 검증
