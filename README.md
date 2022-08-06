@@ -130,6 +130,8 @@ response {
 }
 ```
 
+![이메일본인인증](https://user-images.githubusercontent.com/94504613/183245333-0970632c-7c09-4db9-a33d-a2591e9ba246.jpg)
+
 #### **📌 랜덤 인증번호로 이메일 인증**
 **`POST` /user/joinRandomNumberConfirm**   
  ✔︎ 아이디 이메일 형식 확인  
@@ -161,8 +163,6 @@ response {
   "EmailConfirm": 0
 }
 ```
-
-![이메일본인인증](https://user-images.githubusercontent.com/94504613/183245333-0970632c-7c09-4db9-a33d-a2591e9ba246.jpg)
 
 #### **📌 회원가입**
 **`POST` /user/join**  
