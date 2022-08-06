@@ -418,9 +418,6 @@ response {
   }
 }
 ```
-<br/>
-
-## 구현 내용 상세
 
 #### **📌 상황별 http status code**
 `200` : 성공  
@@ -432,18 +429,12 @@ response {
 `409` : 아이디 충돌  
 `422` : 아이디나 비밀번호가 맞지 않을 경우  
 `500` : 서버 에러 try catch  
-
-#### **📌 입력값 검증**
-
-#### **📌 메일 보내기**
-
-#### **📌 게시글 검색**
-
-#### **📌 log 남기기**
-
-#### **📌 error 발생시 슬랙 알림**
-
 <br/>
 
 ## 프로젝트 후 블로그 작성한 링크
-- 추후 작성 예정
+상세한 개발과정을 볼 수 있습니다.
+
+- [조회/좋아요 수 증가](https://golgol22.github.io/posts/nodejs-sequelize-increment/)
+- [게시글 검색 (검색어, 해시태그, 정렬, pagination)](https://golgol22.github.io/posts/nodejs-sequelize-hashtag/)
+- 추후 추가 작성 예정
+
