@@ -9,6 +9,14 @@
   <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white"/>
   <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white"/>
 </p>
+<p> 
+  <img src="https://img.shields.io/badge/REST API-009639?style=flat&logo=&logoColor=white"/>
+  <img src="https://img.shields.io/badge/MVC-000000?style=flat&logo=&logoColor=white"/>
+  <img src="https://img.shields.io/badge/jwt token-FF9900?style=flat&logo=&logoColor=white"/>
+  <img src="https://img.shields.io/badge/express validator-2496ED?style=flat&logo=&logoColor=white"/>
+  <img src="https://img.shields.io/badge/email sender-527FFF?style=flat&logo=&logoColor=white"/>
+  <img src="https://img.shields.io/badge/winston logger-DC382D?style=flat&logo=&logoColor=white"/>
+</p>
 </div> 
 <br/>
 <br/>
@@ -154,6 +162,8 @@ response {
 }
 ```
 
+![이메일본인인증](https://user-images.githubusercontent.com/94504613/183245333-0970632c-7c09-4db9-a33d-a2591e9ba246.jpg)
+
 #### **📌 회원가입**
 **`POST` /user/join**  
   ✔︎ `userId` 이메일 형식 확인  
@@ -190,6 +200,8 @@ response {
 }
 ```
 
+![로그인정보](https://user-images.githubusercontent.com/94504613/183245338-156b0fdf-44c3-4c4d-9a9a-52ea30b857c6.jpg)
+
 #### **📌 로그인 확인 메일에 대한 사용자 응답 처리**
 사용자가 받은 메일에서 "본인이 맞습니까?"라는 물음에 `예` 또는 `아니오` 버튼을 누르면 서버로 오는 요청  
 **`GET` /user/loginConfirm?answer=2&userId=qwer1234@naver.com&id=1**  
@@ -216,6 +228,8 @@ request {
   "message":  "해당 메일로 임시 비밀번호를 발급했습니다. 해당 비밀번호는 3분간 유효하며 해당 비밀번호로 로그인하고 꼭 비밀번호를 수정하시기 바랍니다."
 }
 ```
+
+![비밀번호찾기](https://user-images.githubusercontent.com/94504613/183245340-4c347422-b8e0-44d0-be56-5f0de2eb12bb.jpg)
 
 #### **📌 내 정보 조회**
 **`GET` /user/myInfo**
@@ -451,7 +465,7 @@ response {
 `500` : 서버 에러 try catch  
 <br/>
 
-## 프로젝트 후 블로그 작성한 링크
+## 프로젝트 후 작성한 블로그 링크
 상세한 개발과정을 볼 수 있습니다.
 
 - [조회/좋아요 수 증가](https://golgol22.github.io/posts/nodejs-sequelize-increment/)
