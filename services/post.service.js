@@ -178,7 +178,7 @@ class PostService {
   static async getList(search, sort, orderBy, hashtags, perPage, page) {
     let offset = 0;
     if (page > 1) {
-      offset = 10 * (page - 1);
+      offset = perPage * (page - 1);
     }
     let searchQuery = true; // 검색어 없을 때 조회할 조건
     if (search != "") {
