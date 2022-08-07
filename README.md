@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/MVC-000000?style=flat&logo=&logoColor=white"/>
   <img src="https://img.shields.io/badge/jwt token-FF9900?style=flat&logo=&logoColor=white"/>
   <img src="https://img.shields.io/badge/express validator-2496ED?style=flat&logo=&logoColor=white"/>
-  <img src="https://img.shields.io/badge/email sender-527FFF?style=flat&logo=&logoColor=white"/>
+  <img src="https://img.shields.io/badge/nodemailer-527FFF?style=flat&logo=&logoColor=white"/>
   <img src="https://img.shields.io/badge/winston logger-DC382D?style=flat&logo=&logoColor=white"/>
 </p>
 </div> 
@@ -470,5 +470,8 @@ response {
 
 - [조회/좋아요 수 증가](https://golgol22.github.io/posts/nodejs-sequelize-increment/)
 - [게시글 검색 (검색어, 해시태그, 정렬, pagination)](https://golgol22.github.io/posts/nodejs-sequelize-hashtag/)
-- 추후 추가 작성 예정
-
+- [express-validator](https://golgol22.github.io/posts/nodejs-express-validator/)
+- [jwt](https://golgol22.github.io/posts/nodejs-jwt/)
+- [접속정보 알아내기](https://golgol22.github.io/posts/nodejs-access-info/)
+- [winston으로 로그남기기](https://golgol22.github.io/posts/nodejs-winston/)
+- [메일보내기(이메일본인인증, 로그인 접속정보, 비밀번호 찾기)](https://golgol22.github.io/posts/nodejs-mail-sender/)
