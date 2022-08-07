@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/winston logger-DC382D?style=flat&logo=&logoColor=white"/>
 </p>
 </div> 
-<br/>
+
 <br/>
 
 ## 프로젝트
@@ -83,6 +83,7 @@
 - [ ] DM 기능 구현 (1:1 채팅)
 - [ ] 팔로잉한 사람의 읽지 않은 새로운 게시글 목록 구현
 - [ ] error가 나면 슬랙에 알림이 울리도록 구현
+
 <br/>
 
 ## 데이터베이스 설계
@@ -113,6 +114,7 @@ value: { 임시 발급된 비밀번호(3가지 조합 8자리 이상) }
 
 ⇒ 두 기능이 같은 key를 사용하는데 이메일 본인 인증은 회원가입하는 경우 사용되고 비밀번호 찾기 기능은 보통 회원가입하고 한참 뒤 비밀번호를 잊어버렸을 경우 사용되기 때문에 두 기능이 3분 안에 값이 덮어씌워질 확률가 적다고 판단하여 같은 key를 사용하였다.  
 ⇒ 또한 회원가입이 완료되고 3분안에 바로 비밀번호 찾기를 하는 경우, 회원가입에 쓰인 **이메일 본인 인증 번호는 이미 인증을 완료하였기 때문에 더 이상 필요없어져 비밀번호 찾기를 할 때 임시 비밀번호로 값이 덮어씌워지더라고 문제가 없다** 판단하였다. 
+
 <br/>
 
 ## REST API
@@ -462,7 +464,8 @@ response {
 `404` : 잘못된 경우, 요청 parameter가 없는 경우일 때  
 `409` : 아이디 충돌  
 `422` : 아이디나 비밀번호가 맞지 않을 경우  
-`500` : 서버 에러 try catch  
+`500` : 서버 에러 try catch 
+ 
 <br/>
 
 ## 프로젝트 후 작성한 블로그 링크
@@ -470,8 +473,8 @@ response {
 
 - [조회/좋아요 수 증가](https://golgol22.github.io/posts/nodejs-sequelize-increment/)
 - [게시글 검색 (검색어, 해시태그, 정렬, pagination)](https://golgol22.github.io/posts/nodejs-sequelize-hashtag/)
-- [express-validator](https://golgol22.github.io/posts/nodejs-express-validator/)
-- [jwt](https://golgol22.github.io/posts/nodejs-jwt/)
+- [express-validator로 값 검증하기](https://golgol22.github.io/posts/nodejs-express-validator/)
+- [jwt 토큰 발급하기](https://golgol22.github.io/posts/nodejs-jwt/)
 - [접속정보 알아내기](https://golgol22.github.io/posts/nodejs-access-info/)
 - [winston으로 로그남기기](https://golgol22.github.io/posts/nodejs-winston/)
 - [메일보내기(이메일본인인증, 로그인 접속정보, 비밀번호 찾기)](https://golgol22.github.io/posts/nodejs-mail-sender/)
