@@ -235,11 +235,34 @@ request {
 **`GET` /user/search**
 ```
 {
-  "message": "qwer1234@naver.com으로 사용자 검색하였습니다.",
-  "userId": "qwer1234@naver.com",
+  "message": "hwjddussls@naver.com으로 사용자 검색하였습니다.",
+  "userId": "hwjddussls@naver.com",
   "userName": "골골",
-  "posts": 0,
-  "postList": []
+  "followers": 0,
+  "followings": 0,
+  "posts": 2,
+  "postList": [
+    {
+      "id": 1,
+      "title": "강릉 여행",
+      "content": "너무 재미있었다.",
+      "likes": 0,
+      "views": 0,
+      "createdAt": "2022-08-08 03:31:56",
+      "updatedAt": "2022-08-08 03:31:56",
+      "hashtags.hashtags": "#맛집,#강릉,#카페,#주말"
+    },
+    {
+      "id": 2,
+      "title": "부산 여행",
+      "content": "너무 재미있었다.",
+      "likes": 0,
+      "views": 0,
+      "createdAt": "2022-08-08 03:33:11",
+      "updatedAt": "2022-08-08 03:33:11",
+      "hashtags.hashtags": "#맛집,#카페"
+    }
+  ]
 }
 ```
 

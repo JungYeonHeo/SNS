@@ -110,7 +110,18 @@ class UserService {
 
   static async findByIdPostList(search) {
     try { 
-      return await models.posts.findAll({where: {userId: search}});
+      const postList = await models.posts.findAll({include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: false 
+      }],
+      attributes: ["id", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: {[Op.and]: [{state: 0}, {userId: `${search}`}]}, group: "posts.id", raw: true});
+      if (postList == []) {
+        return [];
+      } return postList;
     } catch (err) {
       throw err;
     }
