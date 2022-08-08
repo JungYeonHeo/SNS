@@ -67,6 +67,7 @@ class UserService {
   }
 
   static async setConfirmValue(confirm, id) {
+    // 본인 확인 메일에 대한 반응 설정
     try { 
       await models.accessLogs.update({confirm: confirm}, {where: {id: id}});
     } catch (err) {
@@ -100,15 +101,7 @@ class UserService {
     }
   }
 
-  static async findByIdUserInfo(search) {
-    try { 
-      return await models.users.findOne({where: {userId: search}});
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  static async findByIdPostList(search) {
+  static async findPostsByUser(search) {
     try { 
       const postList = await models.posts.findAll({include: [{
         model: models.hashtags,
@@ -122,6 +115,63 @@ class UserService {
       if (postList == []) {
         return [];
       } return postList;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async isFollowed(userId, follow) {
+    try { 
+      return await models.followLogs.findOne({where: {[Op.and]: [{userId: userId}, {follow: follow}]}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusFolloings(userId) {
+    try {
+      await models.users.increment({followings: -1}, {where: {userId: userId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusFollowers(follow) {
+    try {
+      await models.users.increment({followers: -1}, {where: {userId: follow}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setFollowLogsCancel(userId, follow) {
+    try { 
+      await models.followLogs.destroy({where: {[Op.and]: [{userId: userId}, {follow: follow}]}});
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddFolloings(userId) {
+    try {
+      await models.users.increment({followings: 1}, {where: {userId: userId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddFollowers(follow) {
+    try {
+      await models.users.increment({followers: 1}, {where: {userId: follow}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setFollowLogs(userId, follow) {
+    try { 
+      await models.followLogs.create({userId: userId, follow: follow});
     } catch (err) {
       throw err;
     }

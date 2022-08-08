@@ -16,6 +16,7 @@ module.exports = {
   FINDPW: "POST /user/findPw",
   MYINFO: "GET /user/myInfo",
   SEARCH: "GET /user/search",
+  FOLLOW: "POST /user/follow",
   UPDATE_USER: "PATCH /user/update",
   LIKELIST: "GET /user/likeList",
 };
