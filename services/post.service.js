@@ -20,7 +20,7 @@ class PostService {
 
   static async getWriter(postId) {
     try {
-      const writer = await models.posts.findOne({attributes: ["userId"]}, {where: {id: postId}});
+      const writer = await models.posts.findOne({attributes: ["userId"], where: {id: postId}});
       return writer.getDataValue("userId");
     } catch (err) {
       throw err;

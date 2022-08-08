@@ -57,6 +57,9 @@ class PostController {
       if (!isExist) { 
         return res.status(404).json(response.NOT_FOUND);
       }
+      if (isExist.state == 1) {
+        return res.status(400).json({message: response.DELETE_ALREADY});
+      }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
         return res.status(403).json(response.FORBIDDEN);

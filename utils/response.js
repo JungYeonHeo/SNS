@@ -16,6 +16,7 @@ module.exports = {
   LIKE: "해당 게시글에 좋아요를 표시했습니다.", 
   LIKE_CANCEL: "해당 게시글에 좋아요를 취소했습니다.",
   LIKE_FAIL: "좋아요 실패하였습니다. 잠시 후 다시 시도해주세요.",
+  DELETE_ALREADY: "이미 삭제된 게시글입니다.",
   DELETE_LIST: "삭제된 게시물을 조회했습니다.",
   DELETE_LIST_NONE: "삭제된 게시물이 없습니다.",
   DELETE_LIST_FAIL: "삭제된 게시물을 불러오는데 실패하였습니다. 잠시 후 다시 시도해주세요.",
