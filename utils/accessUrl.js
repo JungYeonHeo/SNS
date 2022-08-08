@@ -17,6 +17,8 @@ module.exports = {
   MYINFO: "GET /user/myInfo",
   SEARCH: "GET /user/search",
   FOLLOW: "POST /user/follow",
+  FOLLOWING_LIST: "GET /user/followingList",
+  FOLLOWER_LIST: "GET /user/followerList",
   UPDATE_USER: "PATCH /user/update",
   LIKELIST: "GET /user/likeList",
 };

@@ -12,6 +12,8 @@ router.get("/loginConfirm", UserController.loginConfirmUser);
 router.post("/findPw", checkEmail, UserController.findPwUser);
 router.get("/search", isUser, UserController.searchByUser);
 router.post("/follow", isUser, UserController.followUser);
+router.get("/followingList", isUser, UserController.followingListUser);
+router.get("/followerList", isUser, UserController.followerListUser);
 router.get("/myInfo", isUser, UserController.myInfoUser);
 router.patch("/update", [isUser, checkUpdateMyInfo], UserController.updateUser);
 router.get("/likeList", isUser, UserController.myLikeListUser);

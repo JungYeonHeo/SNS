@@ -265,6 +265,50 @@ class UserController {
     }
   }
 
+  static async followingListUser(req, res) {
+    // target user가 팔로우한 사람 목록
+    logger.info(accessUrl.FOLLOWING_LIST);
+    const userId = req.user.id;
+    const { target } = req.body;
+    try {
+      const followingList = await UserService.getFollowingList(target);
+      if (followingList.length == 0) {
+        logger.info(`[${accessUrl.FOLLOWING_LIST}] ${userId} ${target}${response.FOLLOWING_LIST_NONE}`);
+        return res.status(200).json({message: response.FOLLOWING_LIST_NONE}); 
+      }
+      logger.info(`[${accessUrl.FOLLOWING_LIST}] ${userId} ${target}${response.FOLLOWING_LIST}`);
+      res.status(200).json({
+        message: response.FOLLOWING_LIST, 
+        followingList: followingList
+      }); 
+    } catch (err) {
+      logger.error(`[${accessUrl.FOLLOWING_LIST}] ${userId} ${target} ${err}`);
+      res.status(500).json({message: response.FOLLOWING_LIST_FAIL});
+    }
+  }
+
+  static async followerListUser(req, res) {
+    // target user를 팔로우한 사람 목록
+    logger.info(accessUrl.FOLLOWER_LIST);
+    const userId = req.user.id;
+    const { target } = req.body;
+    try {
+      const followerList = await UserService.getFollowerList(target);
+      if (followerList.length == 0) {
+        logger.info(`[${accessUrl.FOLLOWER_LIST}] ${userId} ${target}${response.FOLLOWER_LIST_NONE}`);
+        return res.status(200).json({message: response.FOLLOWER_LIST_NONE}); 
+      }
+      logger.info(`[${accessUrl.FOLLOWER_LIST}] ${userId} ${target}${response.FOLLOWER_LIST}`);
+      res.status(200).json({
+        message: response.FOLLOWER_LIST, 
+        followerList: followerList
+      }); 
+    } catch (err) {
+      logger.error(`[${accessUrl.FOLLOWER_LIST}] ${userId} ${target} ${err}`);
+      res.status(500).json({message: response.FOLLOWER_LIST_FAIL});
+    }
+  }
+
   static async myInfoUser(req, res) {
     logger.info(accessUrl.MYINFO);
     const userId = req.user.id;

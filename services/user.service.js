@@ -177,6 +177,28 @@ class UserService {
     }
   }
 
+  static async getFollowingList(target) {
+    try { 
+      const followingList = await models.followLogs.findAll({attributes: ["follow"], where: {userId: target}});
+      if (followingList == []) {
+        return [];
+      } return followingList;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getFollowerList(target) {
+    try { 
+      const followerList = await models.followLogs.findAll({attributes: ["userId"], where: {follow: target}});
+      if (followerList == []) {
+        return [];
+      } return followerList;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async getUserInfo(userId) {
     try { 
       return await models.users.findOne({where: {userId: userId}});

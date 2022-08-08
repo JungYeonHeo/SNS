@@ -43,7 +43,8 @@
 - [X] 접속한 적 없는 ip, os, device, browser로 접속 시 확인 메일 보내 검증
 - [X] 비밀번호 찾기 - 가입한 메일로 임시 비밀번호 생성해 발송
 - [X] 유저 검색 기능 - userId으로 검색 -> 이메일, 이름, 팔로우&팔로워수, 게시글 수, 게시글 목록 
-- [X] 팔로잉 동작 기능 구현
+- [X] 팔로잉 동작 기능
+- [X] 팔로우, 팔로워 목록 확인
 - [X] 회원정보 조회
 - [X] 회원정보 수정
 - [X] 좋아요 누른 게시글 조회
@@ -75,7 +76,6 @@
 - [X] docker를 사용한 환경 구축
 
 #### **📌 구현 예정** 
-- [ ] 팔로우, 팔로워 목록 확인
 - [ ] 게시글에 댓글 달 수 있도록 구현
 - [ ] DM 기능 구현 (1:1 채팅)
 - [ ] 팔로잉한 사람의 읽지 않은 새로운 게시글 목록 구현
@@ -276,7 +276,7 @@ request {
 - 없는 user를 팔로우 하려는 경우
 ```
 response {
-  "message": "없는 유접입니다.",
+  "message": "없는 유저입니다.",
 }
 ```
 - 나를 팔로우 하려는 경우
@@ -298,6 +298,55 @@ response {
 }
 ```
 
+#### **📌 팔로잉 목록 조회**
+**`GET` /user/followingList**
+```
+request {
+  "target": "qwer1234@naver.com"
+}
+```
+- 팔로잉 목록이 없는 경우
+```
+response {
+  "message": "팔로잉 리스트가 없습니다.",
+}
+```
+- 팔로잉 목록이 있는 경우
+```
+response {
+  "message": "팔로잉 리스트를 조회했습니다.",
+  "followingList": [
+    {
+      "userId": "hwjddussls@naver.com"
+    }
+  ]
+}
+```
+
+#### **📌 팔로우 목록 조회**
+**`GET` /user/followerList**
+```
+request {
+  "target": "qwer1234@naver.com"
+}
+```
+- 팔로우 목록이 없는 경우
+```
+response {
+  "message": "팔로우 리스트가 없습니다.",
+}
+```
+- 팔로우 목록이 있는 경우
+```
+response {
+  "message": "팔로우 리스트를 조회했습니다.",
+  "followerList": [
+    {
+      "userId": "hwjddussls@naver.com"
+    }
+  ]
+}
+```
 
 #### **📌 내 정보 조회**
 **`GET` /user/myInfo**
