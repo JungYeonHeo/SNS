@@ -35,6 +35,8 @@ module.exports = {
   SEND_FIND_PW_MAIL: "해당 메일로 임시 비밀번호를 발급했습니다. 해당 비밀번호는 3분간 유효하며 해당 비밀번호로 로그인하고 꼭 비밀번호를 수정하시기 바랍니다.",
   NOT_USER: "해당 이메일로 가입된 적이 없습니다.",
   FINDPW_FAIL: "비밀번호 찾기에 실패하였습니다.",
+  SEARCH_BY_NAME: "으로 사용자 검색하였습니다.",
+  SEARCH_BY_NAME_FAIL: "으로 사용자 검색에 실패하였습니다.",
   USER_INFO: "사용자 정보를 조회했습니다.",
   USER_INFO_FAIL: "사용자 정보 조회에 실패했습니다.",
   UPDATE_USER_INFO: "사용자 정보를 수정했습니다.",

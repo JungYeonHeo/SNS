@@ -15,6 +15,7 @@ module.exports = {
   LOGIN_CONFIRM: "GET /user/loginConfirm",
   FINDPW: "POST /user/findPw",
   MYINFO: "GET /user/myInfo",
+  SEARCH: "GET /user/search",
   UPDATE_USER: "PATCH /user/update",
   LIKELIST: "GET /user/likeList",
 };

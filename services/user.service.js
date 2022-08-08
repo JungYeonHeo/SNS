@@ -100,6 +100,22 @@ class UserService {
     }
   }
 
+  static async findByIdUserInfo(search) {
+    try { 
+      return await models.users.findOne({where: {userId: search}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async findByIdPostList(search) {
+    try { 
+      return await models.posts.findAll({where: {userId: search}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async getUserInfo(userId) {
     try { 
       return await models.users.findOne({where: {userId: userId}});

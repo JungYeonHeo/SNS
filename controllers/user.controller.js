@@ -138,7 +138,6 @@ class UserController {
         UserController.sendLoginConfirmMail(userId, createdAccessInfo.id, now, ip, os, device, browser, country, city, res);
       }
       const accessToken = generateAccessToken(userId);
-      console.log("Bearer " + accessToken);
       logger.info(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN}`);
       return res.status(200).json({message: response.LOGIN, token: "Bearer " + accessToken});
     } catch (err) {
@@ -209,6 +208,29 @@ class UserController {
     <h3 style='color: crimson;'>${response.EMAIL_TEMP_PW_WARNING}</h3>`;
     transporter.sendMail(tempPWOptions, res);
     logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.FIND_PW_SEND_MAIL}`);
+  }
+
+  static async searchByUser(req, res) {
+    logger.info(accessUrl.SEARCH);
+    const userId = req.user.id;
+    const { search } = req.body;
+    try {
+      const userInfo = await UserService.findByIdUserInfo(search);
+      const postList = await UserService.findByIdPostList(search);
+      logger.info(`[${accessUrl.SEARCH}] ${userId} ${search}${response.SEARCH_BY_NAME}`);
+      res.status(200).json({
+        message: `${search}${response.SEARCH_BY_NAME}`,
+        userId: userInfo.userId,
+        userName: userInfo.userName, 
+        followers: userInfo.followers,
+        followings: userInfo.followings,
+        posts: postList.length,
+        postList: postList
+      }); 
+    } catch (err) {
+      logger.error(`[${accessUrl.SEARCH}] ${userId} ${search} ${err}`);
+      res.status(500).json({message: response.SEARCH_BY_NAME_FAIL});
+    }
   }
 
   static async myInfoUser(req, res) {

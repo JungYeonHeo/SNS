@@ -42,6 +42,7 @@
 - [X] 회원가입시 입력한 이메일로 메일을 보내 실제 본인 이메일이 맞는지 인증
 - [X] 접속한 적 없는 ip, os, device, browser로 접속 시 확인 메일 보내 검증
 - [X] 비밀번호 찾기 - 가입한 메일로 임시 비밀번호 생성해 발송
+- [X] 유저 검색 기능 - userId으로 검색 -> 이메일, 이름, 팔로우&팔로워수, 게시글 수, 게시글 목록 
 - [X] 회원정보 조회
 - [X] 회원정보 수정
 - [X] 좋아요 누른 게시글 조회
@@ -73,13 +74,9 @@
 - [X] docker를 사용한 환경 구축
 
 #### **📌 구현 예정** 
-- [ ] 게시글에 댓글 달 수 있도록 구현
-- [ ] 유저 검색 기능 구현
 - [ ] 팔로잉하는 기능 구현
-- [ ] 내 정보 조회 수정 (팔로워&팔로잉 수 추가)
 - [ ] 팔로우, 팔로워 목록 확인
-- [ ] 사용자 프로필 이미지, 소개글 추가 기능
-- [ ] 게시글에 이미지, 동영상 올릴 수 있도록 구현
+- [ ] 게시글에 댓글 달 수 있도록 구현
 - [ ] DM 기능 구현 (1:1 채팅)
 - [ ] 팔로잉한 사람의 읽지 않은 새로운 게시글 목록 구현
 - [ ] error가 나면 슬랙에 알림이 울리도록 구현
@@ -477,4 +474,5 @@ response {
 - [jwt 토큰 발급하기](https://golgol22.github.io/posts/nodejs-jwt/)
 - [접속정보 알아내기](https://golgol22.github.io/posts/nodejs-access-info/)
 - [winston으로 로그남기기](https://golgol22.github.io/posts/nodejs-winston/)
+- [nodejs에서 redis 사용하기](https://golgol22.github.io/posts/nodejs-redis/)
 - [메일보내기(이메일본인인증, 로그인 접속정보, 비밀번호 찾기)](https://golgol22.github.io/posts/nodejs-mail-sender/)

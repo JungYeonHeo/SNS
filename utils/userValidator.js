@@ -72,7 +72,7 @@ const checkJoin = [
     .withMessage(response.USERNAME_INCLUDE_SCRIPT),
   body("emailConfirm")
     .trim()
-    .equals(1)
+    .equals("1")
     .withMessage(response.JOIN_EMAIL_CONFIRM)  
 ];
 

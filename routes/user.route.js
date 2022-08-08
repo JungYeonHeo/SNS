@@ -10,6 +10,7 @@ router.post("/join", checkJoin, UserController.joinUser);
 router.post("/login", checkLogin, UserController.loginUser);
 router.get("/loginConfirm", UserController.loginConfirmUser);
 router.post("/findPw", checkEmail, UserController.findPwUser);
+router.get("/search", isUser, UserController.searchByUser);
 router.get("/myInfo", isUser, UserController.myInfoUser);
 router.patch("/update", [isUser, checkUpdateMyInfo], UserController.updateUser);
 router.get("/likeList", isUser, UserController.myLikeListUser);
