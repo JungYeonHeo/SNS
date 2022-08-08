@@ -15,6 +15,7 @@ class PostController {
     const { title, content, hashtags } = req.body;
     try {
       await PostService.create(userId, title, content, hashtags);
+      logger.info(`[${accessUrl.CREATE}] ${userId} ${response.CREATE}`);
       res.status(201).json({message: response.CREATE});
     } catch (err) {
       logger.error(`[${accessUrl.CREATE}] ${userId} ${err}`);
@@ -34,13 +35,16 @@ class PostController {
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
+        logger.warn(`[${accessUrl.UPDATE}] ${userId} ${response.NOT_FOUND}`);
         return res.status(404).json(response.NOT_FOUND);
       }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
+        logger.warn(`[${accessUrl.UPDATE}] ${userId} ${response.FORBIDDEN}`);
         return res.status(403).json(response.FORBIDDEN);
       }
       await PostService.update(postId, title, content, hashtags);
+      logger.info(`[${accessUrl.UPDATE}] ${userId} ${response.UPDATE}`);
       res.status(200).json({message: response.UPDATE});
     } catch (err) {
       logger.error(`[${accessUrl.UPDATE}] ${userId} ${err}`);
@@ -55,16 +59,20 @@ class PostController {
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
+        logger.warn(`[${accessUrl.DELETE}] ${userId} ${response.NOT_FOUND}`);
         return res.status(404).json(response.NOT_FOUND);
       }
       if (isExist.state == 1) {
+        logger.warn(`[${accessUrl.DELETE}] ${userId} ${response.DELETE_ALREADY}`);
         return res.status(400).json({message: response.DELETE_ALREADY});
       }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
+        logger.warn(`[${accessUrl.DELETE}] ${userId} ${response.FORBIDDEN}`);
         return res.status(403).json(response.FORBIDDEN);
       }
       await PostService.delete(postId);
+      logger.info(`[${accessUrl.DELETE}] ${userId} ${response.DELETE}`);
       res.status(200).json({message: response.DELETE});
     } catch (err) {
       logger.error(`[${accessUrl.DELETE}] ${userId} ${err}`);
@@ -79,6 +87,7 @@ class PostController {
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
+        logger.warn(`[${accessUrl.DETAIL}] ${userId} ${response.NOT_FOUND}`);
         return res.status(404).json(response.NOT_FOUND);
       }
       const haveSeen = await PostService.getPostLog(postId, userId);
@@ -89,6 +98,7 @@ class PostController {
         await PostService.setAddViews(postId);
       }
       const detailPostInfo = await PostService.getDetail(postId); 
+      logger.info(`[${accessUrl.DETAIL}] ${userId} ${response.DETAIL}`);
       res.status(200).json({
         message: response.DETAIL, 
         detailInfo: detailPostInfo
@@ -106,16 +116,19 @@ class PostController {
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
+        logger.warn(`[${accessUrl.LIKE}] ${userId} ${response.NOT_FOUND}`);
         return res.status(404).json(response.NOT_FOUND);
       }
       const isClickedLikePost = await PostService.getClickedLikePost(postId, userId);
       if (isClickedLikePost) {
         await PostService.setMinusLikes(postId);
         await PostService.setMinusLikeUser(postId, userId);
+        logger.info(`[${accessUrl.LIKE}] ${userId} ${response.LIKE_CANCEL}`);
         return res.status(200).json({message: response.LIKE_CANCEL});
       } 
       await PostService.setAddLikes(postId);
       await PostService.setAddLikeUser(postId, userId);
+      logger.info(`[${accessUrl.LIKE}] ${userId} ${response.LIKE}`);
       res.status(200).json({message: response.LIKE});
     } catch (err) {
       logger.error(`[${accessUrl.LIKE}] ${userId} ${err}`);
@@ -129,8 +142,10 @@ class PostController {
     try {
       const deletedListInfo = await PostService.getDeletedList(userId);
       if (deletedListInfo.length == 0) {
+        logger.info(`[${accessUrl.DELETEDLIST}] ${userId} ${response.DELETE_LIST_NONE}`);
         return res.status(200).json({message: response.DELETE_LIST_NONE});
       } 
+      logger.info(`[${accessUrl.DELETEDLIST}] ${userId} ${response.DELETE_LIST}`);
       res.status(200).json({
         message: response.DELETE_LIST, 
         deletedListInfo: deletedListInfo
@@ -148,13 +163,16 @@ class PostController {
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
+        logger.warn(`[${accessUrl.RESTORE}] ${userId} ${response.NOT_FOUND}`);
         return res.status(404).json(response.NOT_FOUND);
       }
       const writer = await PostService.getWriter(postId);
       if (userId != writer) {
+        logger.warn(`[${accessUrl.RESTORE}] ${userId} ${response.FORBIDDEN}`);
         return res.status(403).json(response.FORBIDDEN);
       }
       await PostService.setRestorePost(postId);
+      logger.info(`[${accessUrl.RESTORE}] ${userId} ${response.RESTORE}`);
       res.status(200).json({message: response.RESTORE});
     } catch (err) {
       logger.error(`[${accessUrl.RESTORE}] ${userId} ${err}`);
@@ -176,11 +194,13 @@ class PostController {
     try {
       const listInfo = await PostService.getList(search, sort, orderBy, hashtags, perPage, page);
       if (listInfo.length == 0) {
+        logger.info(`[${accessUrl.LIST}] ${userId} ${response.LIST_NONE}`);
         return res.status(200).json({
           message: response.LIST_NONE, 
           filter: filter
         });
       } 
+      logger.info(`[${accessUrl.LIST}] ${userId} ${response.LIST}`);
       res.status(200).json({
         message: response.LIST, 
         filter: filter,

@@ -80,6 +80,7 @@ class UserController {
     try {
       const userInfo = await UserService.isJoined(userId);
       if (userInfo) {
+        logger.warn(`[${accessUrl.JOIN}] ${userId} ${response.JOIN_ID_DUPLICATE}`);
         return res.status(409).json({message: response.JOIN_ID_DUPLICATE});
       } else {
         await UserService.join(userId, hashPw, userName);
@@ -105,11 +106,13 @@ class UserController {
     try {
       const userInfo = await UserService.getUserInfo(userId);
       if (!userInfo) {
+        logger.warn(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN_NO_MATCH}`);
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const isMatch = await bcrypt.compare(userPw, userInfo.userPw);
       const tempPw = await UserService.getRandomAuthNumber(userId);
       if (!isMatch && userPw != tempPw) {
+        logger.warn(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN_NO_MATCH}`);
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const { ip, os, device, browser, country, city } = await getRequestAccessInfo(req, res);
@@ -238,11 +241,13 @@ class UserController {
     const userId = req.user.id;
     const { follow } = req.body;
     if (userId == follow) {
+      logger.warn(`[${accessUrl.FOLLOW}] ${userId} ${response.CAN_NOT_FOLLOW_ME}`);
       return res.status(400).json({message: response.CAN_NOT_FOLLOW_ME});
     }
     try {
       const userInfo = await UserService.isJoined(follow);
       if (!userInfo) {
+        logger.warn(`[${accessUrl.FOLLOW}] ${userId} ${response.NOT_EXIST_USER}`);
         return res.status(400).json({message: response.NOT_EXIST_USER});
       }
       const followInfo = await UserService.isFollowed(userId, follow);
