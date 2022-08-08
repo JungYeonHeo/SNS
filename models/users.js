@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       userPw: DataTypes.STRING,
       userName: DataTypes.STRING,
+      followers: DataTypes.INTEGER,
+      followings: DataTypes.INTEGER
     }, {
       sequelize,
       modelName: "users",

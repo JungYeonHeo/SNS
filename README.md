@@ -230,13 +230,28 @@ request {
 
 ![비밀번호찾기](https://user-images.githubusercontent.com/94504613/183245340-4c347422-b8e0-44d0-be56-5f0de2eb12bb.jpg)
 
+
+#### **📌 사용자 정보 검색**
+**`GET` /user/search**
+```
+{
+  "message": "qwer1234@naver.com으로 사용자 검색하였습니다.",
+  "userId": "qwer1234@naver.com",
+  "userName": "골골",
+  "posts": 0,
+  "postList": []
+}
+```
+
 #### **📌 내 정보 조회**
 **`GET` /user/myInfo**
 ```
 response {
   "message": "사용자 정보를 조회했습니다.",
   "userId": "qwer1234@naver.com",
-  "userName": "골골"
+  "userName": "골골",
+  "followers": 0,
+  "followings": 0
 }
 ```
 

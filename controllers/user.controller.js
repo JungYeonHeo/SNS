@@ -238,11 +238,14 @@ class UserController {
     const userId = req.user.id;
     try {
       const userInfo = await UserService.getUserInfo(userId);
+      console.log(userInfo);
       logger.info(`[${accessUrl.MYINFO}] ${userId} ${response.USER_INFO}`);
       res.status(200).json({
         message: response.USER_INFO,
         userId: userInfo.userId,
-        userName: userInfo.userName
+        userName: userInfo.userName, 
+        followers: userInfo.followers,
+        followings: userInfo.followings,
       }); 
     } catch (err) {
       logger.error(`[${accessUrl.MYINFO}] ${userId} ${err}`);
