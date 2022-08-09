@@ -619,7 +619,7 @@ response {
 ```
 
 #### **📌 게시글 댓글 수정**
-  ✔︎ 작성자만 수정가능
+  ✔︎ 작성자만 수정가능  
 **`PATCH` /post/comment/:commentId**
 ```
 request {
@@ -633,7 +633,7 @@ response {
 ```
 
 #### **📌 게시글 댓글 삭제**
-  ✔︎ 작성자만 삭제가능
+  ✔︎ 작성자만 삭제가능  
 **`DELETE` /post/comment/:commentId**
 ```
 response {
