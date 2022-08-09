@@ -230,6 +230,35 @@ class PostController {
       res.status(500).json({message: response.CREATE_COMMENT_FAIL});
     }
   }
+
+  static async updateComment(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({message: errors.errors.map((obj) => obj.msg)});
+    }
+    logger.info(accessUrl.UPDATE_COMMENT);
+    const userId = req.user.id;
+    const commentId = req.params.commentId;
+    const { comment } = req.body;
+    try {
+      const isExist = await PostService.getByCommentId(commentId);
+      if (!isExist) { 
+        logger.warn(`[${accessUrl.UPDATE_COMMENT}] ${userId} ${commentId} ${response.NOT_FOUND}`);
+        return res.status(404).json(response.NOT_FOUND);
+      }
+      const writer = await PostService.getCommentWriter(commentId);
+      if (userId != writer) {
+        logger.warn(`[${accessUrl.UPDATE_COMMENT}] ${userId} ${commentId} ${response.FORBIDDEN}`);
+        return res.status(403).json(response.FORBIDDEN);
+      }
+      await PostService.setUpdateComment(commentId, comment);
+      logger.info(`[${accessUrl.UPDATE_COMMENT}] ${userId} ${commentId} ${response.UPDATE_COMMENT}`);
+      res.status(201).json({message: response.UPDATE_COMMENT});
+    } catch (err) {
+      logger.error(`[${accessUrl.UPDATE_COMMENT}] ${userId} ${commentId} ${err}`);
+      res.status(500).json({message: response.UPDATE_COMMENT_FAIL});
+    }
+  }
 }
 
 module.exports = PostController;

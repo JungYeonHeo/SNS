@@ -18,18 +18,18 @@ class PostService {
     }
   }
 
-  static async getWriter(postId) {
+  static async getById(postId) {
     try {
-      const writer = await models.posts.findOne({attributes: ["userId"], where: {id: postId}});
-      return writer.getDataValue("userId");
+      return await models.posts.findOne({where: {id: postId}});
     } catch (err) {
       throw err;
     }
   }
 
-  static async getById(postId) {
+  static async getWriter(postId) {
     try {
-      return await models.posts.findOne({where: {id: postId}});
+      const writer = await models.posts.findOne({attributes: ["userId"], where: {id: postId}});
+      return writer.getDataValue("userId");
     } catch (err) {
       throw err;
     }
@@ -211,9 +211,35 @@ class PostService {
     }
   }
 
+  // 댓글 기능 구현
   static async setComment(postId, userId, comment) {
     try {
       await models.comments.create({postId: postId, userId: userId, comment: comment});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getByCommentId(commentId) {
+    try {
+      return await models.comments.findOne({where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getCommentWriter(commentId) {
+    try {
+      const writer = await models.comments.findOne({attributes: ["userId"], where: {id: commentId}});
+      return writer.getDataValue("userId");
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setUpdateComment(commentId, comment) {
+    try {
+      await models.comments.update({comment: comment}, {where: {id: commentId}});
     } catch (err) {
       throw err;
     }
