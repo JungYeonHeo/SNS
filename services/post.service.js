@@ -118,22 +118,6 @@ class PostService {
     }
   }
   
-  static async setAddLikes(postId) {
-    try {
-      await models.posts.increment({likes: 1}, {where: {id: postId}});
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  static async setAddLikeUser(postId, userId) {
-    try {
-      await models.postLikes.create({postId: postId, userId: userId});
-    } catch (err) {
-      throw err;
-    }
-  }
-
   static async setMinusLikes(postId) {
     try {
       await models.posts.increment({likes: -1}, {where: {id: postId}});
@@ -145,6 +129,22 @@ class PostService {
   static async setMinusLikeUser(postId, userId) {
     try {
       await models.postLikes.destroy({where: {[Op.and]: [{postId: postId}, {userId: userId}]}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddLikes(postId) {
+    try {
+      await models.posts.increment({likes: 1}, {where: {id: postId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddLikeUser(postId, userId) {
+    try {
+      await models.postLikes.create({postId: postId, userId: userId});
     } catch (err) {
       throw err;
     }
@@ -248,6 +248,49 @@ class PostService {
   static async setDeleteComment(commentId) {
     try {
       await models.comments.destroy({where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getClickedLikeComment(commentId, userId) {
+    try {
+      const isClickedLikeComment = await models.commentLikes.findOne({where: {[Op.and]: [{commentId: commentId}, {userId: userId}]}});
+      if (isClickedLikeComment == null) {
+        return false;
+      } return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusCommentLikes(commentId) {
+    try {
+      await models.comments.increment({likes: -1}, {where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusCommentLikeUser(commentId, userId) {
+    try {
+      await models.commentLikes.destroy({where: {[Op.and]: [{commentId: commentId}, {userId: userId}]}});
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async setAddCommentLikes(commentId) {
+    try {
+      await models.comments.increment({likes: 1}, {where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async setAddCommentLikeUser(commentId, userId) {
+    try {
+      await models.commentLikes.create({commentId: commentId, userId: userId});
     } catch (err) {
       throw err;
     }

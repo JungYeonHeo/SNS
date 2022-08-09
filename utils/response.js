@@ -31,6 +31,9 @@ module.exports = {
   UPDATE_COMMENT_FAIL: "댓글 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.",
   DELETE_COMMENT: "댓글이 삭제되었습니다.",
   DELETE_COMMENT_FAIL: "댓글 삭제에 실패하였습니다. 잠시 후 다시 시도해주세요.",
+  LIKE_COMMENT: "댓글에 좋아요를 표시했습니다.",
+  LIKE_COMMENT_CANCEL: "댓글에 좋아요를 취소했습니다.",
+  LIKE_COMMENT_FAIL: "댓글 좋아요에 실패하였습니다. 잠시 후 다시 시도해주세요.",
 
   JOIN_ID_DUPLICATE: "이미 사용중인 이메일입니다.",
   JOIN: "회원가입이 되었습니다.",

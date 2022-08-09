@@ -283,6 +283,33 @@ class PostController {
       res.status(500).json({message: response.DELETE_COMMENT_FAIL});
     }
   }
+
+  static async likeComment(req, res) {
+    logger.info(accessUrl.LIKE_COMMENT);
+    const userId = req.user.id;
+    const commentId = req.params.commentId;
+    try {
+      const isExist = await PostService.getByCommentId(commentId);
+      if (!isExist) { 
+        logger.warn(`[${accessUrl.LIKE_COMMENT}] ${userId} ${response.NOT_FOUND}`);
+        return res.status(404).json(response.NOT_FOUND);
+      }
+      const isClickedLikeComment = await PostService.getClickedLikeComment(commentId, userId);
+      if (isClickedLikeComment) {
+        await PostService.setMinusCommentLikes(commentId);
+        await PostService.setMinusCommentLikeUser(commentId, userId);
+        logger.info(`[${accessUrl.LIKE_COMMENT}] ${userId} ${commentId} ${response.LIKE_COMMENT_CANCEL}`);
+        return res.status(200).json({message: response.LIKE_COMMENT_CANCEL});
+      } 
+      await PostService.setAddCommentLikes(commentId);
+      await PostService.setAddCommentLikeUser(commentId, userId);
+      logger.info(`[${accessUrl.LIKE_COMMENT}] ${userId} ${commentId} ${response.LIKE_COMMENT}`);
+      res.status(200).json({message: response.LIKE_COMMENT});
+    } catch (err) {
+      logger.error(`[${accessUrl.LIKE_COMMENT}] ${userId} ${commentId} ${err}`);
+      res.status(500).json({message: response.LIKE_COMMENT_FAIL});
+    }
+  }
 }
 
 module.exports = PostController;
