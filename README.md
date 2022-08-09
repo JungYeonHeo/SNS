@@ -243,7 +243,31 @@ request {
 #### **📌 사용자 정보 검색**
 **`GET` /user/search**
 ```
-{
+request {
+  "search": "qwer12345@naver.com"
+}
+```
+- 없는 유저인 경우
+```
+response {
+  "message": "해당 유저가 없습니다."
+}
+```
+- 유저가 작성한 게시글이 없는 경우
+```
+response {
+  "message": "hwjddussls@naver.com으로 사용자 검색하였습니다.",
+  "userId": "hwjddussls@naver.com",
+  "userName": "골골",
+  "followers": 0,
+  "followings": 0,
+  "posts": 2,
+  "postList": "작성한 게시글이 없습니다."
+}
+```
+- 게시글이 있는 경우
+```
+response {
   "message": "hwjddussls@naver.com으로 사용자 검색하였습니다.",
   "userId": "hwjddussls@naver.com",
   "userName": "골골",

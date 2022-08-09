@@ -50,7 +50,7 @@ module.exports = {
   NOT_USER: "해당 이메일로 가입된 적이 없습니다.",
   FINDPW_FAIL: "비밀번호 찾기에 실패하였습니다.",
   SEARCH_BY_ID: "으로 사용자 검색하였습니다.",
-  SEARCH_BY_ID_NONE: "해당 유저가 없습니다",
+  SEARCH_BY_ID_NONE: "해당 유저가 없습니다.",
   SEARCH_POST_LIST_NONE: "작성한 게시글이 없습니다",
   SEARCH_BY_ID_FAIL: "으로 사용자 검색에 실패하였습니다.",
   CAN_NOT_FOLLOW_ME: "나를 팔로우할 수 없습니다.",

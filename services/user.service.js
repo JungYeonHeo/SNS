@@ -112,9 +112,7 @@ class UserService {
       [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{state: 0}, {userId: `${search}`}]}, group: "posts.id", raw: true});
-      if (postList == []) {
-        return [];
-      } return postList;
+      return postList;
     } catch (err) {
       throw err;
     }
@@ -179,10 +177,7 @@ class UserService {
 
   static async getFollowingList(target) {
     try { 
-      const followingList = await models.followLogs.findAll({attributes: ["follow"], where: {userId: target}});
-      if (followingList == []) {
-        return [];
-      } return followingList;
+      return await models.followLogs.findAll({attributes: ["follow"], where: {userId: target}});
     } catch (err) {
       throw err;
     }
@@ -190,10 +185,7 @@ class UserService {
 
   static async getFollowerList(target) {
     try { 
-      const followerList = await models.followLogs.findAll({attributes: ["userId"], where: {follow: target}});
-      if (followerList == []) {
-        return [];
-      } return followerList;
+      return await models.followLogs.findAll({attributes: ["userId"], where: {follow: target}});
     } catch (err) {
       throw err;
     }
@@ -227,9 +219,7 @@ class UserService {
       [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{state: 0}, {id: {[Op.in]: [models.sequelize.literal(query)]}}]}, group: "posts.id", raw: true});
-      if (myLikeList == []) {
-        return [];
-      } return myLikeList;
+      return myLikeList;
     } catch (err) {
       throw err;
     }
