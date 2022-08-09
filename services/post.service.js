@@ -207,6 +207,27 @@ class PostService {
     }
   }
 
+  static async getNewPostList(userId) {
+    // 팔로잉한 유저의 읽지 않은 새로운 게시글 목록 
+    const query1 = `userId in (select follow from followLogs where userId = '${userId}')`;
+    const query2 = `posts.id not in (select postId from postLogs where userId = '${userId}')`;
+    try {
+      const newPostList = await models.posts.findAll({include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: false 
+      }],
+      attributes: ["id", "userId", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: {[Op.and]: [{state: 0}, models.sequelize.literal(query1), models.sequelize.literal(query2)]},
+      group: "posts.id", raw: true});
+      return newPostList;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   // 댓글 기능 구현
   static async setComment(postId, userId, comment) {
     try {

@@ -69,6 +69,7 @@
   - [X] 오름차순/내림차순으로 정렬할 것인지 선택 (default: desc)
   - [X] Filtering - 해당 해시태그를 가진 게시글만 보도록 
   - [X] Pagination - 페이지 당 몇 개의 게시글을 볼 것인지 선택 (default: 10개)
+- [X] 팔로잉한 사람의 아직 읽지 않은 새로운 게시글 목록
 - [X] 게시글 댓글 달기
   - [X] 댓글 작성
   - [X] 댓글 수정
@@ -82,9 +83,8 @@
 - [X] docker를 사용한 환경 구축
 
 #### **📌 구현 예정** 
-- [ ] 팔로잉한 사람의 읽지 않은 새로운 게시글 목록 구현
-- [ ] DM 기능 구현 (1:1 채팅)
 - [ ] error가 나면 슬랙에 알림이 울리도록 구현
+- [ ] DM 기능 구현 (1:1 채팅)
 - [ ] swagger
 
 <br/>
@@ -605,6 +605,34 @@ response {
 }
 ```
 
+#### **📌 팔로잉한 사람의 아직 읽지 않은 새로운 게시글 목록
+**`GET` /post/newList**
+- 읽지 않은 게시글이 있는 경우
+```
+response {
+  "message": "새로운 게시글이 있습니다.",
+  "newPostList": [
+    {
+      "id": 2,
+      "userId": "hwjddussls@naver.com",
+      "title": "해운대 여행",
+      "content": "너무 재미있었다.",
+      "likes": 0,
+      "views": 0,
+      "createdAt": "2022-08-08 03:33:11",
+      "updatedAt": "2022-08-09 12:57:57",
+      "hashtags.hashtags": "#바다,#해운대"
+    }
+  ]
+}
+```
+- 읽지 않은 게시글이 없는 경우
+```
+response {
+  "message": "새로운 게시글을 모두 읽었습니다.",
+}
+```
+
 #### **📌 게시글 댓글 작성**
 **`POST` /post/comment/:postId**
 ```
@@ -619,7 +647,7 @@ response {
 ```
 
 #### **📌 게시글 댓글 수정**
-  ✔︎ 작성자만 수정가능
+  ✔︎ 작성자만 수정가능  
 **`PATCH` /post/comment/:commentId**
 ```
 request {
@@ -633,7 +661,7 @@ response {
 ```
 
 #### **📌 게시글 댓글 삭제**
-  ✔︎ 작성자만 삭제가능
+  ✔︎ 작성자만 삭제가능  
 **`DELETE` /post/comment/:commentId**
 ```
 response {

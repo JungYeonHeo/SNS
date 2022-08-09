@@ -13,6 +13,7 @@ router.patch("/like/:postId", isUser, PostController.likePost);
 router.get("/deletedList", isUser, PostController.deletedListPost);
 router.patch("/restore/:postId", isUser, PostController.restorePost);
 router.get("/list", isUser, PostController.ListPost);
+router.get("/newList", isUser, PostController.newListPost);
 
 router.post("/comment/:postId", [isUser, checkComment], PostController.createComment);
 router.patch("/comment/:commentId", [isUser, checkComment], PostController.updateComment);
