@@ -25,6 +25,9 @@ module.exports = {
   LIST: "게시글 목록을 조회했습니다.",
   LIST_NONE: "게시글이 없습니다.",
   LIST_FAIL: "게시글 조회에 실패하였습니다. 잠시 후 다시 시도해주세요.",
+  CREATE_COMMENT: "게시글에 댓글을 달았습니다.",
+  CREATE_COMMENT_FAIL: "게시글 댓글 달기에 실패하였습니다. 잠시 후 다시 시도해주세요.",
+
   JOIN_ID_DUPLICATE: "이미 사용중인 이메일입니다.",
   JOIN: "회원가입이 되었습니다.",
   JOIN_FAIL: "회원가입에 실패하였습니다.",
@@ -87,9 +90,12 @@ module.exports = {
   TITLE_LENGTH: "2글자이상 30글자 미만으로 입력해주세요.",
   CONTENT_EMPTY: "내용을 입력해주세요.",
   CONTENT_LENGTH: "2글자이상 255글자 미만으로 입력해주세요.",
-  TITLE_INCLUDE_SCRIPT: "제목에 특정 특수문자를 포함할 수 없습니다.",
-  CONTENT_INCLUDE_SCRIPT: "내용에 특정 특수문자를 포함할 수 없습니다.",
+  TITLE_INCLUDE_SCRIPT: "제목에 특정 특수문자를 포함시킬 수 없습니다.",
+  CONTENT_INCLUDE_SCRIPT: "내용에 특정 특수문자를 포함시킬 수 없습니다.",
   HASHTAG_INCLUDE_SCRIPT: "해시태그에 특정 특수문자를 포함할 수 없습니다.",
+  COMMENT_EMPTY: "댓글을 입력해주세요.",
+  COMMENT_LENGTH: "2글자이상 255글자 미만으로 입력해주세요.",
+  COMMENT_INCLUDE_SCRIPT: "댓글에 특정 특수문자를 포함시킬 수 없습니다.",
 
   // mail
   EMAIL_CONFIRM_FROM_SNS: "SNS에서 이메일 주소를 확인합니다.",

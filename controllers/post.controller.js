@@ -14,7 +14,7 @@ class PostController {
     const userId = req.user.id;
     const { title, content, hashtags } = req.body;
     try {
-      await PostService.create(userId, title, content, hashtags);
+      await PostService.setPost(userId, title, content, hashtags);
       logger.info(`[${accessUrl.CREATE}] ${userId} ${response.CREATE}`);
       res.status(201).json({message: response.CREATE});
     } catch (err) {
@@ -30,7 +30,7 @@ class PostController {
     }
     logger.info(accessUrl.UPDATE);
     const userId = req.user.id;
-    const postId = req.params.id;
+    const postId = req.params.postId;
     const { title, content, hashtags } = req.body;
     try {
       const isExist = await PostService.getById(postId);
@@ -43,7 +43,7 @@ class PostController {
         logger.warn(`[${accessUrl.UPDATE}] ${userId} ${response.FORBIDDEN}`);
         return res.status(403).json(response.FORBIDDEN);
       }
-      await PostService.update(postId, title, content, hashtags);
+      await PostService.setUpdatePost(postId, title, content, hashtags);
       logger.info(`[${accessUrl.UPDATE}] ${userId} ${response.UPDATE}`);
       res.status(200).json({message: response.UPDATE});
     } catch (err) {
@@ -55,7 +55,7 @@ class PostController {
   static async deletePost(req, res) {
     logger.info(accessUrl.DELETE);
     const userId = req.user.id;
-    const postId = req.params.id;
+    const postId = req.params.postId;
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
@@ -71,7 +71,7 @@ class PostController {
         logger.warn(`[${accessUrl.DELETE}] ${userId} ${response.FORBIDDEN}`);
         return res.status(403).json(response.FORBIDDEN);
       }
-      await PostService.delete(postId);
+      await PostService.setDeletePost(postId);
       logger.info(`[${accessUrl.DELETE}] ${userId} ${response.DELETE}`);
       res.status(200).json({message: response.DELETE});
     } catch (err) {
@@ -83,7 +83,7 @@ class PostController {
   static async detailPost(req, res) {
     logger.info(accessUrl.DETAIL);
     const userId = req.user.id;
-    const postId = req.params.id;
+    const postId = req.params.postId;
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
@@ -112,7 +112,7 @@ class PostController {
   static async likePost(req, res) {
     logger.info(accessUrl.LIKE);
     const userId = req.user.id;
-    const postId = req.params.id;
+    const postId = req.params.postId;
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
@@ -158,8 +158,8 @@ class PostController {
 
   static async restorePost(req, res) {
     logger.info(accessUrl.RESTORE);
-    const postId = req.params.id;
     const userId = req.user.id;
+    const postId = req.params.postId;
     try {
       const isExist = await PostService.getById(postId);
       if (!isExist) { 
@@ -180,7 +180,7 @@ class PostController {
     }
   }
 
-  static async listPost(req, res) {
+  static async ListPost(req, res) {
     logger.info(accessUrl.LIST);
     const userId = req.user.id;
     let { search, sort, orderBy, hashtags, perPage, page } = req.query;
@@ -209,6 +209,25 @@ class PostController {
     } catch (err) {
       logger.error(`[${accessUrl.LIST}] ${userId} ${err}`);
       res.status(500).json({message: response.LIST_FAIL});
+    }
+  }
+
+  static async createComment(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({message: errors.errors.map((obj) => obj.msg)});
+    }
+    logger.info(accessUrl.CREATE_COMMENT);
+    const userId = req.user.id;
+    const postId = req.params.postId;
+    const { comment } = req.body;
+    try {
+      await PostService.setComment(postId, userId, comment);
+      logger.info(`[${accessUrl.CREATE_COMMENT}] ${userId} ${postId} ${response.CREATE_COMMENT}`);
+      res.status(201).json({message: response.CREATE_COMMENT});
+    } catch (err) {
+      logger.error(`[${accessUrl.CREATE_COMMENT}] ${userId} ${postId} ${err}`);
+      res.status(500).json({message: response.CREATE_COMMENT_FAIL});
     }
   }
 }

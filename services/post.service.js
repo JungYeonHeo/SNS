@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 const makeSearchWord = require("../utils/makeSearchWord");
 
 class PostService {
-  static async create(userId, title, content, hashtags) {
+  static async setPost(userId, title, content, hashtags) {
     try {
       const getCreatePost = await models.posts.create({userId: userId, title: title, content: content});
       const postId = getCreatePost.getDataValue("id");
@@ -35,7 +35,7 @@ class PostService {
     }
   }
 
-  static async update(postId, title, content, hashtags) {
+  static async setUpdatePost(postId, title, content, hashtags) {
     try {
       await models.posts.update({title: title, content: content}, {where: {id: postId}});
       await models.hashtags.destroy({where: {postId: postId}});
@@ -48,7 +48,7 @@ class PostService {
     }
   }
 
-  static async delete(postId) {
+  static async setDeletePost(postId) {
     try {
       await models.posts.update({state: 1}, {where: {id: postId}});
     } catch (err) {
@@ -206,6 +206,14 @@ class PostService {
       if (listInfo == []) {
         return [];
       } return listInfo;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setComment(postId, userId, comment) {
+    try {
+      await models.comments.create({postId: postId, userId: userId, comment: comment});
     } catch (err) {
       throw err;
     }
