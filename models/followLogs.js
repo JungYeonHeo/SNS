@@ -15,8 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  followLogs.init({
-    }, {
+  followLogs.init({}, {
       sequelize,
       modelName: "followLogs",
     }

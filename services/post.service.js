@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 const makeSearchWord = require("../utils/makeSearchWord");
 
 class PostService {
-  static async create(userId, title, content, hashtags) {
+  static async setPost(userId, title, content, hashtags) {
     try {
       const getCreatePost = await models.posts.create({userId: userId, title: title, content: content});
       const postId = getCreatePost.getDataValue("id");
@@ -18,6 +18,14 @@ class PostService {
     }
   }
 
+  static async getById(postId) {
+    try {
+      return await models.posts.findOne({where: {id: postId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async getWriter(postId) {
     try {
       const writer = await models.posts.findOne({attributes: ["userId"], where: {id: postId}});
@@ -27,15 +35,7 @@ class PostService {
     }
   }
 
-  static async getById(postId) {
-    try {
-      return await models.posts.findOne({where: {id: postId}});
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  static async update(postId, title, content, hashtags) {
+  static async setUpdatePost(postId, title, content, hashtags) {
     try {
       await models.posts.update({title: title, content: content}, {where: {id: postId}});
       await models.hashtags.destroy({where: {postId: postId}});
@@ -48,7 +48,7 @@ class PostService {
     }
   }
 
-  static async delete(postId) {
+  static async setDeletePost(postId) {
     try {
       await models.posts.update({state: 1}, {where: {id: postId}});
     } catch (err) {
@@ -118,22 +118,6 @@ class PostService {
     }
   }
   
-  static async setAddLikes(postId) {
-    try {
-      await models.posts.increment({likes: 1}, {where: {id: postId}});
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  static async setAddLikeUser(postId, userId) {
-    try {
-      await models.postLikes.create({postId: postId, userId: userId});
-    } catch (err) {
-      throw err;
-    }
-  }
-
   static async setMinusLikes(postId) {
     try {
       await models.posts.increment({likes: -1}, {where: {id: postId}});
@@ -150,6 +134,22 @@ class PostService {
     }
   }
 
+  static async setAddLikes(postId) {
+    try {
+      await models.posts.increment({likes: 1}, {where: {id: postId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddLikeUser(postId, userId) {
+    try {
+      await models.postLikes.create({postId: postId, userId: userId});
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async getDeletedList(userId) {
     try {
       const deletedListInfo = await models.posts.findAll({include: [{
@@ -161,9 +161,7 @@ class PostService {
       [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{state: 1}, {userId: userId}]}, group: "posts.id", raw: true});
-      if (deletedListInfo == []) {
-        return [];
-      } return deletedListInfo;
+      return deletedListInfo;
     } catch (err) {
       throw err;
     }
@@ -203,9 +201,100 @@ class PostService {
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{state: 0}, models.sequelize.literal(searchQuery), models.sequelize.literal(hashtagQuery)]},
       group: "posts.id", order: [[sort, orderBy]], offset: offset, limit: perPage, subQuery: false, raw: true});
-      if (listInfo == []) {
-        return [];
-      } return listInfo;
+      return listInfo;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // 댓글 기능 구현
+  static async setComment(postId, userId, comment) {
+    try {
+      await models.comments.create({postId: postId, userId: userId, comment: comment});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getByCommentId(commentId) {
+    try {
+      return await models.comments.findOne({where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getCommentWriter(commentId) {
+    try {
+      const writer = await models.comments.findOne({attributes: ["userId"], where: {id: commentId}});
+      return writer.getDataValue("userId");
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setUpdateComment(commentId, comment) {
+    try {
+      await models.comments.update({comment: comment}, {where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setDeleteComment(commentId) {
+    try {
+      await models.comments.destroy({where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getClickedLikeComment(commentId, userId) {
+    try {
+      const isClickedLikeComment = await models.commentLikes.findOne({where: {[Op.and]: [{commentId: commentId}, {userId: userId}]}});
+      if (isClickedLikeComment == null) {
+        return false;
+      } return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusCommentLikes(commentId) {
+    try {
+      await models.comments.increment({likes: -1}, {where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusCommentLikeUser(commentId, userId) {
+    try {
+      await models.commentLikes.destroy({where: {[Op.and]: [{commentId: commentId}, {userId: userId}]}});
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async setAddCommentLikes(commentId) {
+    try {
+      await models.comments.increment({likes: 1}, {where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async setAddCommentLikeUser(commentId, userId) {
+    try {
+      await models.commentLikes.create({commentId: commentId, userId: userId});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getPostCommentList(postId) {
+    try {
+      return await models.comments.findAll({where: {postId: postId}});
     } catch (err) {
       throw err;
     }

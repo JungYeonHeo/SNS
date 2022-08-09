@@ -219,20 +219,24 @@ class UserController {
     const { search } = req.body;
     try {
       const userInfo = await UserService.isJoined(search);
+      if (!userInfo) {
+        logger.info(`[${accessUrl.SEARCH}] ${userId} ${search}${response.SEARCH_BY_ID}`);
+        return res.status(200).json({message: `${search}${response.SEARCH_BY_ID_NONE}`}); 
+      }
       const postList = await UserService.findPostsByUser(search);
-      logger.info(`[${accessUrl.SEARCH}] ${userId} ${search}${response.SEARCH_BY_NAME}`);
+      logger.info(`[${accessUrl.SEARCH}] ${userId} ${search}${response.SEARCH_BY_ID}`);
       res.status(200).json({
-        message: `${search}${response.SEARCH_BY_NAME}`,
+        message: `${search}${response.SEARCH_BY_ID}`,
         userId: userInfo.userId,
         userName: userInfo.userName, 
         followers: userInfo.followers,
         followings: userInfo.followings,
         posts: postList.length,
-        postList: postList
+        postList: postList.length == 0 ? response.SEARCH_POST_LIST_NONE : postList
       }); 
     } catch (err) {
       logger.error(`[${accessUrl.SEARCH}] ${userId} ${search} ${err}`);
-      res.status(500).json({message: response.SEARCH_BY_NAME_FAIL});
+      res.status(500).json({message: `${search} ${response.SEARCH_BY_ID_FAIL}`});
     }
   }
 

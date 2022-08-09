@@ -7,6 +7,11 @@ module.exports = {
   DELETEDLIST: "GET /post/deletedList",
   RESTORE: "PATCH /post/restore",
   LIST: "GET /post/list",
+  CREATE_COMMENT: "POST /post/comment",
+  UPDATE_COMMENT: "PATCH /post/comment",
+  DELETE_COMMENT: "DELETE /post/comment",
+  LIKE_COMMENT: "PATCH /post/comment/like",
+  LIST_COMMENT: "GET /post/comment",
 
   JOIN_EMAIL_CONFIRM: "POST /user/joinEmailConfirm",
   JOIN_RANDOM_NUM_CONFIRM: "POST /user/joinRandomNumberConfirm",
