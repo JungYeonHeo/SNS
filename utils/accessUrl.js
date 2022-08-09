@@ -11,6 +11,7 @@ module.exports = {
   UPDATE_COMMENT: "PATCH /post/comment",
   DELETE_COMMENT: "DELETE /post/comment",
   LIKE_COMMENT: "PATCH /post/comment/like",
+  LIST_COMMENT: "GET /post/comment",
 
   JOIN_EMAIL_CONFIRM: "POST /user/joinEmailConfirm",
   JOIN_RANDOM_NUM_CONFIRM: "POST /user/joinRandomNumberConfirm",

@@ -161,9 +161,7 @@ class PostService {
       [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{state: 1}, {userId: userId}]}, group: "posts.id", raw: true});
-      if (deletedListInfo == []) {
-        return [];
-      } return deletedListInfo;
+      return deletedListInfo;
     } catch (err) {
       throw err;
     }
@@ -203,9 +201,7 @@ class PostService {
       [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
       where: {[Op.and]: [{state: 0}, models.sequelize.literal(searchQuery), models.sequelize.literal(hashtagQuery)]},
       group: "posts.id", order: [[sort, orderBy]], offset: offset, limit: perPage, subQuery: false, raw: true});
-      if (listInfo == []) {
-        return [];
-      } return listInfo;
+      return listInfo;
     } catch (err) {
       throw err;
     }
@@ -291,6 +287,14 @@ class PostService {
   static async setAddCommentLikeUser(commentId, userId) {
     try {
       await models.commentLikes.create({commentId: commentId, userId: userId});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getPostCommentList(postId) {
+    try {
+      return await models.comments.findAll({where: {postId: postId}});
     } catch (err) {
       throw err;
     }

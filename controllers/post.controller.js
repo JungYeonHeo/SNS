@@ -291,7 +291,7 @@ class PostController {
     try {
       const isExist = await PostService.getByCommentId(commentId);
       if (!isExist) { 
-        logger.warn(`[${accessUrl.LIKE_COMMENT}] ${userId} ${response.NOT_FOUND}`);
+        logger.warn(`[${accessUrl.LIKE_COMMENT}] ${userId} ${commentId} ${response.NOT_FOUND}`);
         return res.status(404).json(response.NOT_FOUND);
       }
       const isClickedLikeComment = await PostService.getClickedLikeComment(commentId, userId);
@@ -308,6 +308,32 @@ class PostController {
     } catch (err) {
       logger.error(`[${accessUrl.LIKE_COMMENT}] ${userId} ${commentId} ${err}`);
       res.status(500).json({message: response.LIKE_COMMENT_FAIL});
+    }
+  }
+
+  static async listComment(req, res) {
+    logger.info(accessUrl.LIST_COMMENT);
+    const userId = req.user.id;
+    const postId = req.params.postId;
+    try {
+      const isExist = await PostService.getById(postId);
+      if (!isExist) { 
+        logger.warn(`[${accessUrl.LIST_COMMENT}] ${userId} ${postId} ${response.NOT_FOUND}`);
+        return res.status(404).json(response.NOT_FOUND);
+      }
+      const commentList = await PostService.getPostCommentList(postId);
+      if (commentList.length == 0) {
+        logger.info(`[${accessUrl.LIST_COMMENT}] ${userId} ${postId} ${response.LIST_COMMENT_NONE}`);
+        return res.status(200).json({message: response.LIST_COMMENT_NONE});
+      }
+      logger.info(`[${accessUrl.LIST_COMMENT}] ${userId} ${postId} ${response.LIST_COMMENT}`);
+      res.status(200).json({
+        message: response.LIST_COMMENT,
+        commentList: commentList
+      });
+    } catch (err) {
+      logger.error(`[${accessUrl.LIST_COMMENT}] ${userId} ${postId} ${err}`);
+      res.status(500).json({message: response.LIST_COMMENT_FAIL});
     }
   }
 }

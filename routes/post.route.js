@@ -18,6 +18,6 @@ router.post("/comment/:postId", [isUser, checkComment], PostController.createCom
 router.patch("/comment/:commentId", [isUser, checkComment], PostController.updateComment);
 router.delete("/comment/:commentId", isUser, PostController.deleteComment);
 router.patch("/comment/like/:commentId", isUser, PostController.likeComment);
-// router.get("/comment/:postId", isUser, PostController.listComment);
+router.get("/comment/:postId", isUser, PostController.listComment);
 
 module.exports = router;
