@@ -212,6 +212,26 @@ class PostController {
     }
   }
 
+  static async newListPost(req, res) {
+    logger.info(accessUrl.NEW_LIST);
+    const userId = req.user.id;
+    try {
+      const newPostList = await PostService.getNewPostList(userId);
+      if (newPostList.length == 0) {
+        logger.info(`[${accessUrl.NEW_LIST}] ${userId} ${response.NEW_LIST_NONE}`);
+        return res.status(200).json({message: response.NEW_LIST_NONE});
+      } 
+      logger.info(`[${accessUrl.NEW_LIST}] ${userId} ${response.NEW_LIST}`);
+      res.status(200).json({
+        message: response.NEW_LIST, 
+        newPostList: newPostList
+      });
+    } catch (err) {
+      logger.error(`[${accessUrl.NEW_LIST}] ${userId} ${err}`);
+      res.status(500).json({message: response.NEW_LIST_FAIL});
+    }
+  }
+
   static async createComment(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

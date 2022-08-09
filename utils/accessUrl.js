@@ -7,6 +7,7 @@ module.exports = {
   DELETEDLIST: "GET /post/deletedList",
   RESTORE: "PATCH /post/restore",
   LIST: "GET /post/list",
+  NEW_LIST: "GET /post/newList",
   CREATE_COMMENT: "POST /post/comment",
   UPDATE_COMMENT: "PATCH /post/comment",
   DELETE_COMMENT: "DELETE /post/comment",
