@@ -67,6 +67,7 @@ class UserService {
   }
 
   static async setConfirmValue(confirm, id) {
+    // 본인 확인 메일에 대한 반응 설정
     try { 
       await models.accessLogs.update({confirm: confirm}, {where: {id: id}});
     } catch (err) {
@@ -97,6 +98,104 @@ class UserService {
       throw err;
     } finally {
       await client.disconnect();
+    }
+  }
+
+  static async findPostsByUser(search) {
+    try { 
+      const postList = await models.posts.findAll({include: [{
+        model: models.hashtags,
+        attributes: [[models.sequelize.fn("group_concat", models.sequelize.col("tag")), "hashtags"]],
+        required: false 
+      }],
+      attributes: ["id", "title", "content", "likes", "views",
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.createdAt"), "%Y-%m-%d %h:%i:%s"), "createdAt"],
+      [models.sequelize.fn("date_format", models.sequelize.col("posts.updatedAt"), "%Y-%m-%d %h:%i:%s"), "updatedAt"]],
+      where: {[Op.and]: [{state: 0}, {userId: `${search}`}]}, group: "posts.id", raw: true});
+      if (postList == []) {
+        return [];
+      } return postList;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async isFollowed(userId, follow) {
+    try { 
+      return await models.followLogs.findOne({where: {[Op.and]: [{userId: userId}, {follow: follow}]}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusFolloings(userId) {
+    try {
+      await models.users.increment({followings: -1}, {where: {userId: userId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setMinusFollowers(follow) {
+    try {
+      await models.users.increment({followers: -1}, {where: {userId: follow}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setFollowLogsCancel(userId, follow) {
+    try { 
+      await models.followLogs.destroy({where: {[Op.and]: [{userId: userId}, {follow: follow}]}});
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddFolloings(userId) {
+    try {
+      await models.users.increment({followings: 1}, {where: {userId: userId}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setAddFollowers(follow) {
+    try {
+      await models.users.increment({followers: 1}, {where: {userId: follow}});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async setFollowLogs(userId, follow) {
+    try { 
+      await models.followLogs.create({userId: userId, follow: follow});
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getFollowingList(target) {
+    try { 
+      const followingList = await models.followLogs.findAll({attributes: ["follow"], where: {userId: target}});
+      if (followingList == []) {
+        return [];
+      } return followingList;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getFollowerList(target) {
+    try { 
+      const followerList = await models.followLogs.findAll({attributes: ["userId"], where: {follow: target}});
+      if (followerList == []) {
+        return [];
+      } return followerList;
+    } catch (err) {
+      throw err;
     }
   }
 

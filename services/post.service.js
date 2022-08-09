@@ -20,7 +20,7 @@ class PostService {
 
   static async getWriter(postId) {
     try {
-      const writer = await models.posts.findOne({attributes: ["userId"]}, {where: {id: postId}});
+      const writer = await models.posts.findOne({attributes: ["userId"], where: {id: postId}});
       return writer.getDataValue("userId");
     } catch (err) {
       throw err;
@@ -73,6 +73,7 @@ class PostService {
   }
 
   static async setAddMyViews(id) {
+    // 내가 해당 게시글을 본 횟수 증가
     try {
       await models.postLogs.increment({userViews: 1}, {where: {id: id}});
     } catch (err) {
@@ -81,6 +82,7 @@ class PostService {
   }
 
   static async setAddViews(postId) {
+    // 게시글 조회수 증가
     try {
       await models.posts.increment({views: 1}, {where: {id: postId}});
     } catch (err) {

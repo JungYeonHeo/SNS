@@ -80,6 +80,7 @@ class UserController {
     try {
       const userInfo = await UserService.isJoined(userId);
       if (userInfo) {
+        logger.warn(`[${accessUrl.JOIN}] ${userId} ${response.JOIN_ID_DUPLICATE}`);
         return res.status(409).json({message: response.JOIN_ID_DUPLICATE});
       } else {
         await UserService.join(userId, hashPw, userName);
@@ -105,11 +106,13 @@ class UserController {
     try {
       const userInfo = await UserService.getUserInfo(userId);
       if (!userInfo) {
+        logger.warn(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN_NO_MATCH}`);
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const isMatch = await bcrypt.compare(userPw, userInfo.userPw);
       const tempPw = await UserService.getRandomAuthNumber(userId);
       if (!isMatch && userPw != tempPw) {
+        logger.warn(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN_NO_MATCH}`);
         return res.status(422).json({message: response.LOGIN_NO_MATCH});
       }
       const { ip, os, device, browser, country, city } = await getRequestAccessInfo(req, res);
@@ -138,7 +141,6 @@ class UserController {
         UserController.sendLoginConfirmMail(userId, createdAccessInfo.id, now, ip, os, device, browser, country, city, res);
       }
       const accessToken = generateAccessToken(userId);
-      console.log("Bearer " + accessToken);
       logger.info(`[${accessUrl.LOGIN}] ${userId} ${response.LOGIN}`);
       return res.status(200).json({message: response.LOGIN, token: "Bearer " + accessToken});
     } catch (err) {
@@ -211,16 +213,120 @@ class UserController {
     logger.info(`[${accessUrl.FINDPW}] ${userId} ${response.FIND_PW_SEND_MAIL}`);
   }
 
+  static async searchByUser(req, res) {
+    logger.info(accessUrl.SEARCH);
+    const userId = req.user.id;
+    const { search } = req.body;
+    try {
+      const userInfo = await UserService.isJoined(search);
+      const postList = await UserService.findPostsByUser(search);
+      logger.info(`[${accessUrl.SEARCH}] ${userId} ${search}${response.SEARCH_BY_NAME}`);
+      res.status(200).json({
+        message: `${search}${response.SEARCH_BY_NAME}`,
+        userId: userInfo.userId,
+        userName: userInfo.userName, 
+        followers: userInfo.followers,
+        followings: userInfo.followings,
+        posts: postList.length,
+        postList: postList
+      }); 
+    } catch (err) {
+      logger.error(`[${accessUrl.SEARCH}] ${userId} ${search} ${err}`);
+      res.status(500).json({message: response.SEARCH_BY_NAME_FAIL});
+    }
+  }
+
+  static async followUser(req, res) {
+    logger.info(accessUrl.FOLLOW);
+    const userId = req.user.id;
+    const { follow } = req.body;
+    if (userId == follow) {
+      logger.warn(`[${accessUrl.FOLLOW}] ${userId} ${response.CAN_NOT_FOLLOW_ME}`);
+      return res.status(400).json({message: response.CAN_NOT_FOLLOW_ME});
+    }
+    try {
+      const userInfo = await UserService.isJoined(follow);
+      if (!userInfo) {
+        logger.warn(`[${accessUrl.FOLLOW}] ${userId} ${response.NOT_EXIST_USER}`);
+        return res.status(400).json({message: response.NOT_EXIST_USER});
+      }
+      const followInfo = await UserService.isFollowed(userId, follow);
+      if (followInfo) {
+        // 팔로우 취소 (팔로잉 수&팔로워 수 감소, 팔로우 기록 삭제)
+        await UserService.setMinusFolloings(userId); 
+        await UserService.setMinusFollowers(follow); 
+        await UserService.setFollowLogsCancel(userId, follow);
+        logger.info(`[${accessUrl.FOLLOW}] ${userId} ${follow}${response.FOLLOW_CANCELED}`);
+        return res.status(200).json({message: response.FOLLOW_CANCELED}); 
+      }
+      await UserService.setAddFolloings(userId); 
+      await UserService.setAddFollowers(follow); 
+      await UserService.setFollowLogs(userId, follow);
+      logger.info(`[${accessUrl.FOLLOW}] ${userId} ${follow}${response.FOLLOWED}`);
+      res.status(200).json({message: response.FOLLOWED}); 
+    } catch (err) {
+      logger.error(`[${accessUrl.FOLLOW}] ${userId} ${follow} ${err}`);
+      res.status(500).json({message: response.FOLLOW_FAIL});
+    }
+  }
+
+  static async followingListUser(req, res) {
+    // target user가 팔로우한 사람 목록
+    logger.info(accessUrl.FOLLOWING_LIST);
+    const userId = req.user.id;
+    const { target } = req.body;
+    try {
+      const followingList = await UserService.getFollowingList(target);
+      if (followingList.length == 0) {
+        logger.info(`[${accessUrl.FOLLOWING_LIST}] ${userId} ${target}${response.FOLLOWING_LIST_NONE}`);
+        return res.status(200).json({message: response.FOLLOWING_LIST_NONE}); 
+      }
+      logger.info(`[${accessUrl.FOLLOWING_LIST}] ${userId} ${target}${response.FOLLOWING_LIST}`);
+      res.status(200).json({
+        message: response.FOLLOWING_LIST, 
+        followingList: followingList
+      }); 
+    } catch (err) {
+      logger.error(`[${accessUrl.FOLLOWING_LIST}] ${userId} ${target} ${err}`);
+      res.status(500).json({message: response.FOLLOWING_LIST_FAIL});
+    }
+  }
+
+  static async followerListUser(req, res) {
+    // target user를 팔로우한 사람 목록
+    logger.info(accessUrl.FOLLOWER_LIST);
+    const userId = req.user.id;
+    const { target } = req.body;
+    try {
+      const followerList = await UserService.getFollowerList(target);
+      if (followerList.length == 0) {
+        logger.info(`[${accessUrl.FOLLOWER_LIST}] ${userId} ${target}${response.FOLLOWER_LIST_NONE}`);
+        return res.status(200).json({message: response.FOLLOWER_LIST_NONE}); 
+      }
+      logger.info(`[${accessUrl.FOLLOWER_LIST}] ${userId} ${target}${response.FOLLOWER_LIST}`);
+      res.status(200).json({
+        message: response.FOLLOWER_LIST, 
+        followerList: followerList
+      }); 
+    } catch (err) {
+      logger.error(`[${accessUrl.FOLLOWER_LIST}] ${userId} ${target} ${err}`);
+      res.status(500).json({message: response.FOLLOWER_LIST_FAIL});
+    }
+  }
+
   static async myInfoUser(req, res) {
     logger.info(accessUrl.MYINFO);
     const userId = req.user.id;
     try {
       const userInfo = await UserService.getUserInfo(userId);
+      console.log(userInfo);
       logger.info(`[${accessUrl.MYINFO}] ${userId} ${response.USER_INFO}`);
       res.status(200).json({
         message: response.USER_INFO,
         userId: userInfo.userId,
-        userName: userInfo.userName
+        userName: userInfo.userName, 
+        followers: userInfo.followers,
+        followings: userInfo.followings,
       }); 
     } catch (err) {
       logger.error(`[${accessUrl.MYINFO}] ${userId} ${err}`);

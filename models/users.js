@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       users.hasMany(models.accessLogs, {
         foreignKey: "userId"
       });
+      users.hasMany(models.followLogs, {
+        foreignKey: "userId"
+      });
     }
   }
   users.init({
@@ -24,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       userPw: DataTypes.STRING,
       userName: DataTypes.STRING,
+      followers: DataTypes.INTEGER,
+      followings: DataTypes.INTEGER
     }, {
       sequelize,
       modelName: "users",
