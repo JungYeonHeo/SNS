@@ -244,6 +244,14 @@ class PostService {
       throw err;
     }
   }
+
+  static async setDeleteComment(commentId) {
+    try {
+      await models.comments.destroy({where: {id: commentId}});
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = PostService;

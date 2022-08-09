@@ -259,6 +259,30 @@ class PostController {
       res.status(500).json({message: response.UPDATE_COMMENT_FAIL});
     }
   }
+
+  static async deleteComment(req, res) {
+    logger.info(accessUrl.DELETE_COMMENT);
+    const userId = req.user.id;
+    const commentId = req.params.commentId;
+    try {
+      const isExist = await PostService.getByCommentId(commentId);
+      if (!isExist) { 
+        logger.warn(`[${accessUrl.DELETE_COMMENT}] ${userId} ${commentId} ${response.NOT_FOUND}`);
+        return res.status(404).json(response.NOT_FOUND);
+      }
+      const writer = await PostService.getCommentWriter(commentId);
+      if (userId != writer) {
+        logger.warn(`[${accessUrl.DELETE_COMMENT}] ${userId} ${commentId} ${response.FORBIDDEN}`);
+        return res.status(403).json(response.FORBIDDEN);
+      }
+      await PostService.setDeleteComment(commentId);
+      logger.info(`[${accessUrl.DELETE_COMMENT}] ${userId} ${commentId} ${response.DELETE_COMMENT}`);
+      res.status(201).json({message: response.DELETE_COMMENT});
+    } catch (err) {
+      logger.error(`[${accessUrl.DELETE_COMMENT}] ${userId} ${commentId} ${err}`);
+      res.status(500).json({message: response.DELETE_COMMENT_FAIL});
+    }
+  }
 }
 
 module.exports = PostController;

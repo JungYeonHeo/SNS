@@ -16,7 +16,7 @@ router.get("/list", isUser, PostController.ListPost);
 
 router.post("/comment/:postId", [isUser, checkComment], PostController.createComment);
 router.patch("/comment/:commentId", [isUser, checkComment], PostController.updateComment);
-// router.delete("/comment/:commentId", isUser, PostController.deleteComment);
+router.delete("/comment/:commentId", isUser, PostController.deleteComment);
 // router.get("/comment/:postId", isUser, PostController.listComment);
 // router.patch("/comment/like/:commentId", isUser, PostController.likeComment);
 
