@@ -79,11 +79,11 @@
 
 #### **📌 운영**
 - [X] 서버가 운영 중 멈추는 일이 없도록 모든 기능에 대한 예외처리
-- [X] winston을 통한 info, error 로그 남기기 
+- [X] winston을 통한 info, warn, error 로그 남기기 
 - [X] docker를 사용한 환경 구축
 
 #### **📌 구현 예정** 
-- [ ] error가 나면 슬랙에 알림이 울리도록 구현
+- [ ] error나면 슬랙에 알림이 울리도록 구현
 - [ ] DM 기능 구현 (1:1 채팅)
 - [ ] swagger
 
@@ -92,7 +92,7 @@
 ## 데이터베이스 설계
 
 #### **📌 Mysql (ERD)**
-![sns_erd](https://user-images.githubusercontent.com/94504613/183548719-7f02b016-9849-4de8-bc5b-cff68a750744.png)
+![sns_erd](https://user-images.githubusercontent.com/94504613/183581765-c0f78f45-419d-4fc2-881d-aeba2be99315.png)
 - `users` 유저 정보 저장 테이블
 - `posts` 게시글 저장 테이블
 - `hashtags` 해시태그 저장 테이블
@@ -605,7 +605,7 @@ response {
 }
 ```
 
-#### **📌 팔로잉한 사람의 아직 읽지 않은 새로운 게시글 목록
+#### **📌 팔로잉한 사람의 아직 읽지 않은 새로운 게시글 목록**
 **`GET` /post/newList**
 - 읽지 않은 게시글이 있는 경우
 ```
