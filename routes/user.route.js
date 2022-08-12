@@ -15,7 +15,7 @@ router.post("/follow", isUser, UserController.followUser);
 router.get("/followingList", isUser, UserController.followingListUser);
 router.get("/followerList", isUser, UserController.followerListUser);
 router.get("/myInfo", isUser, UserController.myInfoUser);
-router.patch("/update", [isUser, checkUpdateMyInfo], UserController.updateUser);
+router.put("/", [isUser, checkUpdateMyInfo], UserController.updateUser);
 router.get("/likeList", isUser, UserController.myLikeListUser);
 
 module.exports = router;
