@@ -5,13 +5,13 @@ const isUser = require("../utils/validateJwt");
 const checkPost = require("../utils/postValidator");
 const checkComment = require("../utils/commentValidator");
 
-router.post("/create", [isUser, checkPost], PostController.createPost);
-router.patch("/update/:postId", [isUser, checkPost], PostController.updatePost);
-router.patch("/delete/:postId", isUser, PostController.deletePost);
-router.get("/detail/:postId", isUser, PostController.detailPost);
-router.patch("/like/:postId", isUser, PostController.likePost);
+router.post("/", [isUser, checkPost], PostController.createPost);
+router.put("/:postId", [isUser, checkPost], PostController.updatePost);
+router.patch("/:postId", isUser, PostController.deletePost);
+router.get("/:postId", isUser, PostController.detailPost);
 router.get("/deletedList", isUser, PostController.deletedListPost);
 router.patch("/restore/:postId", isUser, PostController.restorePost);
+router.patch("/like/:postId", isUser, PostController.likePost);
 router.get("/list", isUser, PostController.ListPost);
 router.get("/newList", isUser, PostController.newListPost);
 
