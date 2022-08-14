@@ -1,8 +1,8 @@
 module.exports = {
-  CREATE: "POST /post/create",
-  UPDATE: "POST /post/update",
-  DELETE: "PATCH /post/delete",
-  DETAIL: "GET /post/detail",
+  CREATE: "POST /post/",
+  UPDATE: "PUT /post/",
+  DELETE: "PATCH /post/",
+  DETAIL: "GET /post/",
   LIKE: "PATCH /post/like",
   DELETEDLIST: "GET /post/deletedList",
   RESTORE: "PATCH /post/restore",
@@ -25,6 +25,6 @@ module.exports = {
   FOLLOW: "POST /user/follow",
   FOLLOWING_LIST: "GET /user/followingList",
   FOLLOWER_LIST: "GET /user/followerList",
-  UPDATE_USER: "PATCH /user/update",
+  UPDATE_USER: "PUT /user/update",
   LIKELIST: "GET /user/likeList",
 };
